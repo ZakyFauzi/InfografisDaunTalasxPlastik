@@ -161,51 +161,51 @@
   </style>
 </head>
 <body>
-  <h1>Infografis Populasi Hewan</h1>
+  <h1>Infografis Tinggi Badan</h1>
 
   <!-- Infografis: Bar Chart -->
-  <h2>Populasi (dalam ribuan)</h2>
+  <h2>Tinggi (dalam cm)</h2>
   <div class="chart-container">
-    <div class="bar" style="height: 200px;">Kucing<br>200</div>
-    <div class="bar" style="height: 150px;">Anjing<br>150</div>
-    <div class="bar" style="height: 100px;">Burung<br>100</div>
+    <div class="bar" style="height: 200px;">Dzaki<br>200</div>
+    <div class="bar" style="height: 150px;">Afiqah<br>150</div>
+    <div class="bar" style="height: 50px;">Anjaly<br>Waduh</div>
   </div>
 
   <!-- Tabel Data -->
   <h2>Data Fakta</h2>
   <table class="data-table">
     <tr>
-      <th>Hewan</th>
-      <th>Populasi (Ribu)</th>
-      <th>Fakta</th>
+      <th>Nama</th>
+      <th>Tinggi (cm)</th>
+      <th>Keterangan</th>
     </tr>
     <tr>
-      <td>Kucing</td>
+      <td>Dzaki</td>
       <td>200</td>
-      <td>Hewan peliharaan paling populer di kota.</td>
+      <td>Muhammad Dzaki Dzakimen.</td>
     </tr>
     <tr>
-      <td>Anjing</td>
+      <td>Afiqah</td>
       <td>150</td>
-      <td>Dikenal sebagai sahabat setia manusia.</td>
+      <td>yang imut lucu dan menggemaskan serta ceria.</td>
     </tr>
     <tr>
-      <td>Burung</td>
-      <td>100</td>
-      <td>Banyak dipelihara karena suaranya yang merdu.</td>
+      <td>Anjaly</td>
+      <td>waduh</td>
+      <td>Maaaaaaaaaaaaaaaaaaakkkkkkk.</td>
     </tr>
   </table>
 
   <!-- Chatbot -->
-  <button class="chatbot-toggle" onclick="toggleChatbot()">+</button>
+  <button class="chatbot-toggle" onclick="toggleChatbot()">?</button>
   <div class="chatbot" id="chatbot">
     <div class="chatbot-header">
-      <span>Chatbot Hewan</span>
+      <span>tes chatbot</span>
       <button onclick="toggleChatbot()">X</button>
     </div>
     <div class="chatbot-body" id="chatbotBody"></div>
     <div class="chatbot-input">
-      <input type="text" id="chatbotInput" placeholder="Tanya tentang hewan...">
+      <input type="text" id="chatbotInput" placeholder="Tanya tentang para perbestian...">
       <button onclick="sendMessage()">Kirim</button>
     </div>
   </div>
@@ -213,9 +213,7 @@
   <script>
     // Data untuk Chatbot
     const data = [
-      { hewan: "kucing", populasi: 200, fakta: "Hewan peliharaan paling populer di kota." },
-      { hewan: "anjing", populasi: 150, fakta: "Dikenal sebagai sahabat setia manusia." },
-      { hewan: "burung", populasi: 100, fakta: "Banyak dipelihara karena suaranya yang merdu." }
+      {  },
     ];
 
     // Fungsi Chatbot
@@ -239,7 +237,7 @@
       body.appendChild(userMessage);
 
       // Cari jawaban
-      let answer = "Maaf, saya tidak tahu jawabannya.";
+      let answer = "Maaf, hal itu di luar jangkauan saya.";
       for (const item of data) {
         if (question.includes(item.hewan)) {
           if (question.includes("populasi")) {
