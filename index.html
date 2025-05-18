@@ -42,56 +42,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Infografis dan Chatbot</title>
+  <title>Eco-Friendly Lifestyle: 3R & Talas Innovations</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    * {
       margin: 0;
-      padding: 20px;
-      background-color: #f4f4f4;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', Arial, sans-serif;
     }
-    h1, h2 {
-      text-align: center;
+    body {
+      background-color: #e8f5e9;
       color: #333;
-    }
-    /* Infografis: Bar Chart */
-    .chart-container {
-      max-width: 600px;
-      margin: 20px auto;
       display: flex;
-      justify-content: space-around;
     }
-    .bar {
-      width: 100px;
-      background-color: #4CAF50;
-      text-align: center;
+    .sidebar {
+      width: 250px;
+      background-color: #388e3c;
       color: white;
-      padding-top: 10px;
-      transition: height 0.3s;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 20px;
+      overflow-y: auto;
     }
-    /* Tabel Data */
-    .data-table {
-      max-width: 600px;
-      margin: 20px auto;
-      border-collapse: collapse;
+    .sidebar h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .sidebar ul {
+      list-style: none;
+    }
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    .sidebar ul li a:hover {
+      background-color: #ffeb3b;
+      color: #388e3c;
+      transform: scale(1.05);
+    }
+    .content {
+      flex-grow: 1;
+      padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .section {
+      margin: 40px 0;
+      padding: 20px;
       background-color: white;
+      border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    h1, h2, h3 {
+      color: #2e7d32;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    p, li {
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
     }
     .data-table th, .data-table td {
-      border: 1px solid #ddd;
+      border: 1px solid #c8e6c9;
       padding: 10px;
       text-align: left;
     }
     .data-table th {
-      background-color: #4CAF50;
+      background-color: #4caf50;
       color: white;
+      cursor: pointer;
     }
-    /* Chatbot */
+    .data-table th:hover {
+      background-color: #388e3c;
+    }
+    .chart-container {
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    .diagram {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 10px;
+      text-align: center;
+    }
     .chatbot {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 300px;
+      width: 320px;
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -102,7 +168,7 @@
       display: flex;
     }
     .chatbot-header {
-      background-color: #4CAF50;
+      background-color: #4caf50;
       color: white;
       padding: 10px;
       border-radius: 10px 10px 0 0;
@@ -113,11 +179,10 @@
       padding: 10px;
       max-height: 200px;
       overflow-y: auto;
-      flex-grow: 1;
     }
     .chatbot-input {
       display: flex;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid #c8e6c9;
     }
     .chatbot-input input {
       flex-grow: 1;
@@ -127,7 +192,7 @@
       border-radius: 0 0 0 10px;
     }
     .chatbot-input button {
-      background-color: #4CAF50;
+      background-color: #4caf50;
       color: white;
       border: none;
       padding: 10px;
@@ -138,7 +203,7 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background-color: #4CAF50;
+      background-color: #4caf50;
       color: white;
       border: none;
       border-radius: 50%;
@@ -152,71 +217,316 @@
     }
     .message.user {
       text-align: right;
-      color: #4CAF50;
+      color: #4caf50;
     }
     .message.bot {
       text-align: left;
       color: #333;
     }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 10px;
+      }
+      .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .sidebar ul li {
+        margin: 5px;
+      }
+      .content {
+        padding: 10px;
+      }
+      .chatbot {
+        width: 90%;
+        right: 5%;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Infografis Tinggi Badan</h1>
-
-  <!-- Infografis: Bar Chart -->
-  <h2>Tinggi (dalam cm)</h2>
-  <div class="chart-container">
-    <div class="bar" style="height: 200px;">Dzaki<br>200</div>
-    <div class="bar" style="height: 150px;">Afiqah<br>150</div>
-    <div class="bar" style="height: 50px;">Anjaly<br>Waduh</div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Daftar Isi</h2>
+    <ul>
+      <li><a href="#masalah">Masalah Plastik</a></li>
+      <li><a href="#solusi-3r">Solusi 3R</a></li>
+      <li><a href="#inovasi-talas">Inovasi Talas</a></li>
+    </ul>
   </div>
 
-  <!-- Tabel Data -->
-  <h2>Data Fakta</h2>
-  <table class="data-table">
-    <tr>
-      <th>Nama</th>
-      <th>Tinggi (cm)</th>
-      <th>Keterangan</th>
-    </tr>
-    <tr>
-      <td>Dzaki</td>
-      <td>200</td>
-      <td>Muhammad Dzaki Dzakimen.</td>
-    </tr>
-    <tr>
-      <td>Afiqah</td>
-      <td>150</td>
-      <td>yang imut lucu dan menggemaskan serta ceria.</td>
-    </tr>
-    <tr>
-      <td>Anjaly</td>
-      <td>waduh</td>
-      <td>Maaaaaaaaaaaaaaaaaaakkkkkkk.</td>
-    </tr>
-  </table>
+  <!-- Content -->
+  <div class="content">
+    <h1>Eco-Friendly Lifestyle: 3R & Talas Innovations</h1>
+
+    <!-- Pembahasan 1: Masalah Plastik -->
+    <div id="masalah" class="section">
+      <h2>Masalah: Plastik, Limbah Plastik, Mikroplastik</h2>
+      <h3>Penjelasan</h3>
+      <p>Sampah plastik adalah krisis global. Indonesia menyumbang 5,4 juta ton limbah plastik per tahun, menjadikannya penyumbang terbesar kedua dunia. Secara global, 100 juta ton plastik diproduksi setiap tahun, menyumbang emisi karbon tinggi dari ekstraksi minyak bumi hingga pembakaran sampah (menghasilkan CO, HCN).</p>
+      <p><strong>Mikroplastik</strong> (partikel <5 mm) berasal dari degradasi plastik atau produk seperti kosmetik. Mikroplastik mencemari tanah (kurangi kesuburan, bunuh cacing), air (ikan/penyu memakannya, ganggu rantai makanan), dan udara. Dampak kesehatan manusia meliputi risiko karsinogenik akibat bahan kimia seperti DEHA dan PCB, serta gangguan hormon.</p>
+      
+      <h3>Data</h3>
+      <table class="data-table" id="masalahTable">
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th>Subkategori</th>
+            <th>Jumlah</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Limbah Plastik</td><td>Global</td><td>100 juta ton/tahun</td><td>Meningkat setiap tahun</td></tr>
+          <tr><td>Limbah Plastik</td><td>Indonesia</td><td>5,4 juta ton/tahun</td><td>Peringkat 2 dunia</td></tr>
+          <tr><td>Limbah Plastik</td><td>Nasional (2024)</td><td>31,9 juta ton</td><td>75% organik, 25% anorganik</td></tr>
+          <tr><td>Mikroplastik</td><td>Dampak</td><td>-</td><td>Cemari tanah, air, fauna; risiko karsinogenik</td></tr>
+        </tbody>
+      </table>
+      
+      <h3>Infografis</h3>
+      <div class="chart-container">
+        <canvas id="masalahBarChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="masalahPieChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Pembahasan 2: Solusi 3R -->
+    <div id="solusi-3r" class="section">
+      <h2>Solusi Umum: Reduce, Reuse, Recycle (3R)</h2>
+      <h3>Penjelasan</h3>
+      <p><strong>3R</strong> adalah pendekatan praktis untuk mengurangi limbah plastik. <strong>Reduce</strong> berfokus pada mengurangi penggunaan plastik sekali pakai, seperti membawa wadah atau tas belanja sendiri. <strong>Reuse</strong> mengubah plastik bekas menjadi barang berguna, misalnya botol plastik jadi pot bunga atau tempat pensil (DIY: potong botol, cat, isi tanah). <strong>Recycle</strong> melibatkan daur ulang plastik ke bank sampah untuk jadi kresek atau pot hitam.</p>
+      <p><strong>Recovery</strong> menambah nilai ekonomi dengan menjual plastik bernilai tinggi (PET, HDPE) untuk produksi ulang, mengurangi timbunan sampah. Penerapan 3R mendukung gaya hidup eco-friendly dan mengurangi dampak lingkungan.</p>
+      
+      <h3>Data</h3>
+      <table class="data-table" id="solusiTable">
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th>Contoh</th>
+            <th>Manfaat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Reduce</td><td>Bawa wadah/tas belanja</td><td>Kurangi plastik sekali pakai</td></tr>
+          <tr><td>Reuse</td><td>Botol jadi pot bunga</td><td>Perpanjang umur plastik</td></tr>
+          <tr><td>Recycle</td><td>Serahkan ke bank sampah</td><td>Jadi kresek/pot hitam</td></tr>
+          <tr><td>Recovery</td><td>Jual PET/HDPE</td><td>Nilai ekonomi, kurangi timbunan</td></tr>
+        </tbody>
+      </table>
+      
+      <h3>Infografis</h3>
+      <div class="diagram">
+        <h4>Alur 3R (Konseptual)</h4>
+        <p>1. Reduce: Kurangi penggunaan → 2. Reuse: Gunakan kembali → 3. Recycle: Daur ulang → 4. Recovery: Ambil nilai ekonomi.</p>
+      </div>
+    </div>
+
+    <!-- Pembahasan 3: Inovasi Talas -->
+    <div id="inovasi-talas" class="section">
+      <h2>Inovasi: Biodegradable Food Packaging Berbasis Lilin Daun Talas</h2>
+      <h3>Penjelasan</h3>
+      <p>Kemasan biodegradable berbasis lilin daun talas adalah solusi inovatif untuk mengatasi pencemaran limbah plastik, terutama kertas bungkus nasi berlaminasi plastik. Kemasan ini memiliki sifat <strong>biodegradable</strong> (terurai 68,74% dalam 9 hari di tanah kompos), <strong>hidrofobik</strong> (100% anti-air berkat efek lotus), dan <strong>antimikroba</strong> (flavonoid, saponin melindungi makanan dari bakteri/jamur).</p>
+      <p><strong>Prosedur Pembuatan</strong>: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, lalu diuji ketahanan (suhu 0–60°C, kelembapan 50–90%). Kemasan ini tahan suhu dan kelembapan, cocok untuk makanan seperti nasi.</p>
+      
+      <h3>Data</h3>
+      <table class="data-table" id="talasTable">
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th>Subkategori</th>
+            <th>Jumlah</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Kemasan Talas</td><td>Biodegradabilitas</td><td>68,74% dalam 9 hari</td><td>Berbasis tanah kompos</td></tr>
+          <tr><td>Kemasan Talas</td><td>Sifat Hidrofobik</td><td>100% anti-air</td><td>Efek lotus</td></tr>
+          <tr><td>Kemasan Talas</td><td>Antimikroba</td><td>Flavonoid, saponin</td><td>Melindungi makanan</td></tr>
+          <tr><td>Degradasi</td><td>Hari 1</td><td>18,46%</td><td>Awal degradasi</td></tr>
+          <tr><td>Degradasi</td><td>Hari 9</td><td>68,74%</td><td>Terurai signifikan</td></tr>
+          <tr><td>Sifat Mekanik</td><td>Tanpa Degradasi</td><td>26,28 MPa</td><td>Modulus simpan</td></tr>
+          <tr><td>Sifat Mekanik</td><td>Hari 9</td><td>15,21 MPa</td><td>Lebih rapuh</td></tr>
+        </tbody>
+      </table>
+      
+      <h3>Infografis</h3>
+      <div class="chart-container">
+        <canvas id="talasBarChart"></canvas>
+      </div>
+      <div class="diagram">
+        <h4>Proses Pembuatan Kemasan Talas</h4>
+        <p>1. Ekstraksi lilin daun talas → 2. Pelapisan kertas cokelat → 3. Pengujian (suhu, kelembapan, biodegradabilitas) → 4. Produksi kemasan.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Chatbot -->
   <button class="chatbot-toggle" onclick="toggleChatbot()">?</button>
   <div class="chatbot" id="chatbot">
     <div class="chatbot-header">
-      <span>tes chatbot</span>
+      <span>Eco-Chatbot</span>
       <button onclick="toggleChatbot()">X</button>
     </div>
     <div class="chatbot-body" id="chatbotBody"></div>
     <div class="chatbot-input">
-      <input type="text" id="chatbotInput" placeholder="Tanya tentang para perbestian...">
+      <input type="text" id="chatbotInput" placeholder="Tanya tentang limbah, 3R, atau talas...">
       <button onclick="sendMessage()">Kirim</button>
     </div>
   </div>
 
   <script>
-    // Data untuk Chatbot
-    const data = [
-      {  },
+    // Data dari PDF
+    const masalahData = [
+      { kategori: "Limbah Plastik", subkategori: "Global", jumlah: "100 juta ton/tahun", keterangan: "Meningkat setiap tahun" },
+      { kategori: "Limbah Plastik", subkategori: "Indonesia", jumlah: "5,4 juta ton/tahun", keterangan: "Peringkat 2 dunia" },
+      { kategori: "Limbah Plastik", subkategori: "Nasional (2024)", jumlah: "31,9 juta ton", keterangan: "75% organik, 25% anorganik" },
+      { kategori: "Mikroplastik", subkategori: "Dampak", jumlah: "-", keterangan: "Cemari tanah, air, fauna; risiko karsinogenik" }
+    ];
+    const solusiData = [
+      { kategori: "Reduce", contoh: "Bawa wadah/tas belanja", manfaat: "Kurangi plastik sekali pakai" },
+      { kategori: "Reuse", contoh: "Botol jadi pot bunga", manfaat: "Perpanjang umur plastik" },
+      { kategori: "Recycle", contoh: "Serahkan ke bank sampah", manfaat: "Jadi kresek/pot hitam" },
+      { kategori: "Recovery", contoh: "Jual PET/HDPE", manfaat: "Nilai ekonomi, kurangi timbunan" }
+    ];
+    const talasData = [
+      { kategori: "Kemasan Talas", subkategori: "Biodegradabilitas", jumlah: "68,74% dalam 9 hari", keterangan: "Berbasis tanah kompos" },
+      { kategori: "Kemasan Talas", subkategori: "Sifat Hidrofobik", jumlah: "100% anti-air", keterangan: "Efek lotus" },
+      { kategori: "Kemasan Talas", subkategori: "Antimikroba", jumlah: "Flavonoid, saponin", keterangan: "Melindungi makanan" },
+      { kategori: "Degradasi", subkategori: "Hari 1", jumlah: "18,46%", keterangan: "Awal degradasi" },
+      { kategori: "Degradasi", subkategori: "Hari 9", jumlah: "68,74%", keterangan: "Terurai signifikan" },
+      { kategori: "Sifat Mekanik", subkategori: "Tanpa Degradasi", jumlah: "26,28 MPa", keterangan: "Modulus simpan" },
+      { kategori: "Sifat Mekanik", subkategori: "Hari 9", jumlah: "15,21 MPa", keterangan: "Lebih rapuh" }
     ];
 
-    // Fungsi Chatbot
+    // Smooth Scroll
+    document.querySelectorAll('.sidebar a').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const target = document.getElementById(targetId);
+        window.scrollTo({
+          top: target.offsetTop - 20,
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Animate Sections
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    sections.forEach(section => observer.observe(section));
+
+    // Render Tables
+    function renderTable(tableId, data) {
+      const table = document.getElementById(tableId);
+      const thead = table.querySelector('thead');
+      const tbody = table.querySelector('tbody');
+      thead.innerHTML = '';
+      tbody.innerHTML = '';
+      const headers = Object.keys(data[0]);
+      const headerRow = document.createElement('tr');
+      headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      data.forEach(item => {
+        const row = document.createElement('tr');
+        headers.forEach(header => {
+          const td = document.createElement('td');
+          td.textContent = item[header];
+          row.appendChild(td);
+        });
+        tbody.appendChild(row);
+      });
+    }
+
+    // Render Charts
+    function renderCharts() {
+      // Masalah: Bar Chart
+      const ctxMasalahBar = document.getElementById("masalahBarChart").getContext("2d");
+      new Chart(ctxMasalahBar, {
+        type: "bar",
+        data: {
+          labels: masalahData.map(item => item.subkategori),
+          datasets: [{
+            label: "Jumlah",
+            data: masalahData.map(item => parseFloat(item.jumlah) || 0),
+            backgroundColor: "#4caf50",
+            borderColor: "#388e3c",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          animation: { duration: 1000, easing: 'easeOutBounce' },
+          plugins: { title: { display: true, text: "Limbah Plastik", color: "#2e7d32", font: { size: 18 } } },
+          scales: { y: { beginAtZero: true, ticks: { color: "#333" } }, x: { ticks: { color: "#333" } } }
+        }
+      });
+
+      // Masalah: Pie Chart
+      const ctxMasalahPie = document.getElementById("masalahPieChart").getContext("2d");
+      new Chart(ctxMasalahPie, {
+        type: "pie",
+        data: {
+          labels: ["Sampah Organik", "Sampah Anorganik"],
+          datasets: [{ data: [75, 25], backgroundColor: ["#4caf50", "#ff6347"], borderColor: ["#ffffff", "#ffffff"], borderWidth: 1 }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top", labels: { color: "#333", font: { size: 14 } } },
+            title: { display: true, text: "Komposisi Sampah Nasional (2024)", color: "#2e7d32", font: { size: 18 } }
+          }
+        }
+      });
+
+      // Inovasi Talas: Bar Chart
+      const ctxTalasBar = document.getElementById("talasBarChart").getContext("2d");
+      new Chart(ctxTalasBar, {
+        type: "bar",
+        data: {
+          labels: ["Hari 1", "Hari 3", "Hari 5", "Hari 7", "Hari 9"],
+          datasets: [{
+            label: "Persentase Degradasi",
+            data: [18.46, 32.80, 53.79, 59.52, 68.74],
+            backgroundColor: "#4caf50",
+            borderColor: "#388e3c",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          animation: { duration: 1000, easing: 'easeOutBounce' },
+          plugins: { title: { display: true, text: "Degradasi Kemasan Talas", color: "#2e7d32", font: { size: 18 } } },
+          scales: { y: { beginAtZero: true, ticks: { color: "#333" } }, x: { ticks: { color: "#333" } } }
+        }
+      });
+    }
+
+    // Chatbot
     function toggleChatbot() {
       const chatbot = document.getElementById("chatbot");
       chatbot.classList.toggle("active");
@@ -230,42 +540,46 @@
       const question = input.value.toLowerCase().trim();
       if (!question) return;
 
-      // Tampilkan pesan pengguna
       const userMessage = document.createElement("div");
       userMessage.className = "message user";
       userMessage.textContent = question;
       body.appendChild(userMessage);
 
-      // Cari jawaban
-      let answer = "Maaf, hal itu di luar jangkauan saya.";
-      for (const item of data) {
-        if (question.includes(item.hewan)) {
-          if (question.includes("populasi")) {
-            answer = `Populasi ${item.hewan} adalah ${item.populasi} ribu.`;
-          } else if (question.includes("fakta")) {
-            answer = `Fakta tentang ${item.hewan}: ${item.fakta}`;
-          } else {
-            answer = `Tentang ${item.hewan}: Populasi ${item.populasi} ribu. ${item.fakta}`;
-          }
-          break;
-        }
+      let answer = "Maaf, saya tidak tahu jawabannya.";
+      if (question.includes("mikroplastik")) {
+        answer = "Mikroplastik adalah partikel plastik <5 mm dari degradasi plastik atau produk seperti kosmetik. Cemari tanah, air, fauna, masuk rantai makanan, berpotensi karsinogenik (DEHA, PCB).";
+      } else if (question.includes("limbah") || question.includes("sampah")) {
+        answer = "Indonesia menghasilkan 5,4 juta ton limbah plastik/tahun (peringkat 2 dunia). Global: 100 juta ton/tahun. Nasional (2024): 31,9 juta ton (75% organik, 25% anorganik).";
+      } else if (question.includes("3r") || question.includes("reduce") || question.includes("reuse") || question.includes("recycle")) {
+        answer = "3R adalah Reduce (bawa wadah sendiri), Reuse (botol jadi pot bunga), Recycle (daur ulang ke bank sampah). Recovery: Jual PET/HDPE untuk nilai ekonomi.";
+      } else if (question.includes("contoh") && question.includes("reuse")) {
+        answer = "Contoh reuse: Potong botol plastik jadi pot bunga, cat, isi tanah. Atau jadikan tempat pensil dari botol bekas.";
+      } else if (question.includes("talas")) {
+        answer = "Kemasan talas biodegradable (68,74% terurai dalam 9 hari), hidrofobik (100% anti-air), antimikroba (flavonoid, saponin). Cocok untuk bungkus nasi.";
+      } else if (question.includes("proses") && question.includes("talas")) {
+        answer = "Proses pembuatan kemasan talas: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, diuji ketahanan (suhu 0–60°C, kelembapan 50–90%).";
+      } else if (question.includes("recovery")) {
+        answer = "Recovery adalah mengambil plastik bernilai ekonomi (PET, HDPE) untuk produksi ulang, mengurangi timbunan sampah.";
       }
 
-      // Tampilkan jawaban bot
       const botMessage = document.createElement("div");
       botMessage.className = "message bot";
       botMessage.textContent = answer;
       body.appendChild(botMessage);
 
-      // Scroll ke bawah
       body.scrollTop = body.scrollHeight;
       input.value = "";
     }
 
-    // Kirim pesan dengan Enter
     document.getElementById("chatbotInput").addEventListener("keypress", (e) => {
       if (e.key === "Enter") sendMessage();
     });
+
+    // Initial Load
+    renderTable("masalahTable", masalahData);
+    renderTable("solusiTable", solusiData);
+    renderTable("talasTable", talasData);
+    renderCharts();
   </script>
 </body>
 </html>
