@@ -4,260 +4,76 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eco-Friendly Lifestyle: 3R & Talas Innovations</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chrono-node/1.3.11/chrono.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.15.0/Recharts.min.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Roboto', Arial, sans-serif;
+    body { font-family: 'Inter', sans-serif; background-color: #F5F5DC; margin: 0; padding-top: 60px; }
+    .section { padding: 40px 20px; }
+    .chart-container { padding: 20px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .infographic { display: flex; justify-content: center; margin: 20px 0; }
+    .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    .table th { background-color: #10B981; color: white; }
+    nav { position: fixed; top: 0; width: 100%; background-color: #14532D; color: white; z-index: 1000; }
+    main { margin-left: 0; }
+    .hamburger { position: fixed; top: 15px; left: 15px; background: none; border: none; font-size: 24px; color: white; cursor: pointer; z-index: 1001; }
+    .sidebar { width: 250px; background-color: #388e3c; color: white; position: sticky; top: 0; height: 100vh; padding: 20px; overflow-y: auto; transition: transform 0.3s ease; transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar h2 { color: white; text-align: center; margin-bottom: 20px; }
+    .sidebar ul { list-style: none; }
+    .sidebar ul li { margin: 15px 0; }
+    .sidebar ul li a { color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; transition: all 0.3s; }
+    .sidebar ul li a:hover { background-color: #ffeb3b; color: #388e3c; transform: scale(1.05); }
+    @media (max-width: 768px) { 
+      .sidebar { width: 200px; }
+      main { margin-left: 0; }
     }
-    body {
-      background-color: #e8f5e9;
-      color: #333;
-      display: flex;
-    }
-    .sidebar {
-      width: 250px;
-      background-color: #388e3c;
-      color: white;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      padding: 20px;
-      overflow-y: auto;
-      transition: transform 0.3s ease;
-    }
-    .sidebar h2 {
-      color: white;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .sidebar ul {
-      list-style: none;
-    }
-    .sidebar ul li {
-      margin: 15px 0;
-    }
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      display: block;
-      padding: 10px;
-      border-radius: 5px;
-      transition: all 0.3s;
-    }
-    .sidebar ul li a:hover {
-      background-color: #ffeb3b;
-      color: #388e3c;
-      transform: scale(1.05);
-    }
-    .content {
-      flex-grow: 1;
-      padding: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    .section {
-      margin: 40px 0;
-      padding: 20px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
-    }
-    .section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    h1, h2, h3 {
-      color: #2e7d32;
-    }
-    h1 {
-      text-align: center;
-      font-size: 2.5em;
-      margin-bottom: 20px;
-    }
-    p, li {
-      line-height: 1.6;
-      margin: 10px 0;
-    }
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-    .data-table th, .data-table td {
-      border: 1px solid #c8e6c9;
-      padding: 10px;
-      text-align: left;
-    }
-    .data-table th {
-      background-color: #4caf50;
-      color: white;
-      cursor: pointer;
-    }
-    .data-table th:hover {
-      background-color: #388e3c;
-    }
-    .chart-container {
-      max-width: 600px;
-      margin: 20px auto;
-    }
-    .diagram {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #f5f5f5;
-      border-radius: 10px;
-      text-align: center;
-    }
-    .chatbot {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 320px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      display: none;
-      flex-direction: column;
-    }
-    .chatbot.active {
-      display: flex;
-    }
-    .chatbot-header {
-      background-color: #4caf50;
-      color: white;
-      padding: 10px;
-      border-radius: 10px 10px 0 0;
-      display: flex;
-      justify-content: space-between;
-    }
-    .chatbot-body {
-      padding: 10px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-    .chatbot-input {
-      display: flex;
-      border-top: 1px solid #c8e6c9;
-    }
-    .chatbot-input input {
-      flex-grow: 1;
-      border: none;
-      padding: 10px;
-      outline: none;
-      border-radius: 0 0 0 10px;
-    }
-    .chatbot-input button {
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-      border-radius: 0 0 10px 0;
-    }
-    .chatbot-toggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
-      font-size: 24px;
-    }
-    .hamburger {
-      display: none;
-      background: none;
-      border: none;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-      padding: 10px;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: fixed;
-        top: 0;
-        left: 0;
-        transform: translateX(-100%);
-        z-index: 1000;
-      }
-      .sidebar.active {
-        transform: translateX(0);
-      }
-      .hamburger {
-        display: block;
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 1100;
-      }
-      .content {
-        padding: 10px;
-        margin-top: 50px;
-      }
-      .chatbot {
-        width: 90%;
-        right: 5%;
-      }
-      h1 {
-        font-size: 1.8em;
-      }
-      h2 {
-        font-size: 1.5em;
-      }
-      p, li {
-        font-size: 0.9em;
-      }
-    }
+    .chatbot-bubble { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #34D399; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .chatbot { position: fixed; bottom: 20px; right: 20px; background: #34D399; padding: 10px; border-radius: 8px; width: 300px; display: none; }
+    .chatbot-open { display: block; }
   </style>
 </head>
 <body>
-  <!-- Hamburger Menu -->
+  <nav class="bg-green-800 text-white p-4 flex justify-between items-center">
+    <div class="text-xl font-bold"></div>
+    <div class="text-xl font-bold">Eco-Friendly Lifestyle</div>
+    <div></div>
+  </nav>
+
   <button class="hamburger" onclick="toggleSidebar()">☰</button>
 
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <h2>Daftar Isi</h2>
     <ul>
-      <li><a href="#masalah" onclick="toggleSidebar()">Masalah Plastik</a></li>
+      <li><a href="#masalah-plastik" onclick="toggleSidebar()">Masalah Plastik</a></li>
       <li><a href="#solusi-3r" onclick="toggleSidebar()">Solusi 3R</a></li>
       <li><a href="#inovasi-talas" onclick="toggleSidebar()">Inovasi Talas</a></li>
       <li><a href="#kesimpulan" onclick="toggleSidebar()">Kesimpulan</a></li>
     </ul>
   </div>
 
-  <!-- Content -->
-  <div class="content">
-    <h1>Eco-Friendly Lifestyle: 3R & Talas Innovations</h1>
+  <main class="flex-1 p-4">
+    <header class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-green-800">Eco-Friendly Lifestyle: 3R & Talas Innovations</h1>
+    </header>
 
-    <!-- Pembahasan 1: Masalah Plastik -->
-    <div id="masalah" class="section">
-      <h2>Masalah: Plastik, Limbah Plastik, Mikroplastik</h2>
-      <h3>Penjelasan</h3>
-      <p>Sampah plastik adalah krisis global. Indonesia menyumbang 5,4 juta ton limbah plastik per tahun, menjadikannya penyumbang terbesar kedua dunia. Secara global, 100 juta ton plastik diproduksi setiap tahun, menyumbang emisi karbon tinggi dari ekstraksi minyak bumi hingga pembakaran sampah (menghasilkan CO, HCN).</p>
-      <p><strong>Mikroplastik</strong> (partikel <5 mm) berasal dari degradasi plastik atau produk seperti kosmetik. Mikroplastik mencemari tanah (kurangi kesuburan, bunuh cacing), air (ikan/penyu memakannya, ganggu rantai makanan), dan udara. Dampak kesehatan manusia meliputi risiko karsinogenik akibat bahan kimia seperti DEHA dan PCB, serta gangguan hormon.</p>
-      
-      <h3>Data</h3>
-      <table class="data-table" id="masalahTable">
+    <section id="masalah-plastik" class="section">
+      <h2 class="text-2xl font-bold mb-4 text-green-700">Masalah: Plastik, Limbah Plastik, Mikroplastik</h2>
+      <h3 class="text-xl font-semibold mb-2">Latar Belakang</h3>
+      <p class="text-gray-700 mb-4">
+        Sampah plastik adalah krisis global. Indonesia menyumbang 5,4 juta ton limbah plastik per tahun, menjadikannya penyumbang terbesar kedua dunia. Secara global, 100 juta ton plastik diproduksi setiap tahun, menyumbang emisi karbon tinggi dari ekstraksi minyak bumi hingga pembakaran sampah (menghasilkan CO, HCN). Mikroplastik (partikel <5 mm) mencemari tanah, air, dan fauna, serta memiliki risiko karsinogenik bagi manusia.
+      </p>
+      <p class="text-gray-700 mb-4">
+        Berdasarkan data nasional, total timbulan sampah di Indonesia pada 2024 mencapai 25,7 juta ton, dengan komposisi didominasi oleh sisa makanan (39,9%), plastik (18,6%), kertas (11,6%), kayu (13%), logam (3,2%), kaca (6,9%), dan lainnya (6,8%). Sumber utama sampah meliputi rumah tangga (terbanyak), perkantoran, pasar, perniagaan, fasilitas umum, kawasan, dan lainnya. Tren timbulan sampah dari 2018 hingga 2024 menunjukkan peningkatan signifikan, dengan penanganan yang hanya mencapai sekitar 50-60% dari total timbulan. Distribusi mikroplastik terdeteksi paling tinggi di sedimen (32,61%), diikuti makanan (30,43%), laut (19,57%), sungai (17,39%), limbah (8,70%), udara (4,35%), dan danau (4,35%), memperparah pencemaran lingkungan.
+      </p>
+      <h3 class="text-xl font-semibold mb-2">Data Limbah Plastik</h3>
+      <table class="table">
         <thead>
           <tr>
             <th>Kategori</th>
@@ -269,29 +85,27 @@
         <tbody>
           <tr><td>Limbah Plastik</td><td>Global</td><td>100 juta ton/tahun</td><td>Meningkat setiap tahun</td></tr>
           <tr><td>Limbah Plastik</td><td>Indonesia</td><td>5,4 juta ton/tahun</td><td>Peringkat 2 dunia</td></tr>
-          <tr><td>Limbah Plastik</td><td>Nasional (2024)</td><td>31,9 juta ton</td><td>75% organik, 25% anorganik</td></tr>
           <tr><td>Mikroplastik</td><td>Dampak</td><td>-</td><td>Cemari tanah, air, fauna; risiko karsinogenik</td></tr>
         </tbody>
       </table>
-      
-      <h3>Infografis</h3>
-      <div class="chart-container">
-        <canvas id="masalahBarChart"></canvas>
-      </div>
-      <div class="chart-container">
-        <canvas id="masalahPieChart"></canvas>
-      </div>
-    </div>
+      <h3 class="text-xl font-semibold mb-2">Komposisi Sampah</h3>
+      <div id="komposisi-chart"></div>
+      <h3 class="text-xl font-semibold mb-2">Sumber Sampah</h3>
+      <div id="sumber-chart"></div>
+      <h3 class="text-xl font-semibold mb-2">Tren Timbulan Sampah (2018-2024)</h3>
+      <div id="tren-chart"></div>
+      <h3 class="text-xl font-semibold mb-2">Distribusi Mikroplastik</h3>
+      <div id="mikroplastik-chart"></div>
+    </section>
 
-    <!-- Pembahasan 2: Solusi 3R -->
-    <div id="solusi-3r" class="section">
-      <h2>Solusi Umum: Reduce, Reuse, Recycle (3R)</h2>
-      <h3>Penjelasan</h3>
-      <p><strong>3R</strong> adalah pendekatan praktis untuk mengurangi limbah plastik. <strong>Reduce</strong> berfokus pada mengurangi penggunaan plastik sekali pakai, seperti membawa wadah atau tas belanja sendiri. <strong>Reuse</strong> mengubah plastik bekas menjadi barang berguna, misalnya botol plastik jadi pot bunga atau tempat pensil (DIY: potong botol, cat, isi tanah). <strong>Recycle</strong> melibatkan daur ulang plastik ke bank sampah untuk jadi kresek atau pot hitam.</p>
-      <p><strong>Recovery</strong> menambah nilai ekonomi dengan menjual plastik bernilai tinggi (PET, HDPE) untuk produksi ulang, mengurangi timbunan sampah. Penerapan 3R mendukung gaya hidup eco-friendly dan mengurangi dampak lingkungan.</p>
-      
-      <h3>Data</h3>
-      <table class="data-table" id="solusiTable">
+    <section id="solusi-3r" class="section">
+      <h2 class="text-2xl font-bold mb-4 text-green-700">Solusi Umum: Reduce, Reuse, Recycle (3R)</h2>
+      <h3 class="text-xl font-semibold mb-2">Penjelasan</h3>
+      <p class="text-gray-700 mb-4">
+        3R adalah pendekatan praktis untuk mengurangi limbah plastik. Reduce berfokus pada mengurangi penggunaan plastik sekali pakai, seperti membawa wadah atau tas belanja sendiri. Reuse mengubah plastik bekas menjadi barang berguna, misalnya botol plastik jadi pot bunga atau tempat pensil (DIY: potong botol, cat, isi tanah). Recycle melibatkan daur ulang plastik ke bank sampah untuk jadi kresek atau pot hitam. Penerapan 3R mendukung gaya hidup eco-friendly dan mengurangi dampak lingkungan.
+      </p>
+      <h3 class="text-xl font-semibold mb-2">Data Pendekatan 3R</h3>
+      <table class="table">
         <thead>
           <tr>
             <th>Kategori</th>
@@ -303,275 +117,360 @@
           <tr><td>Reduce</td><td>Bawa wadah/tas belanja</td><td>Kurangi plastik sekali pakai</td></tr>
           <tr><td>Reuse</td><td>Botol jadi pot bunga</td><td>Perpanjang umur plastik</td></tr>
           <tr><td>Recycle</td><td>Serahkan ke bank sampah</td><td>Jadi kresek/pot hitam</td></tr>
-          <tr><td>Recovery</td><td>Jual PET/HDPE</td><td>Nilai ekonomi, kurangi timbunan</td></tr>
         </tbody>
       </table>
-      
-      <h3>Infografis</h3>
-      <div class="diagram">
-        <h4>Alur 3R (Konseptual)</h4>
-        <p>1. Reduce: Kurangi penggunaan → 2. Reuse: Gunakan kembali → 3. Recycle: Daur ulang → 4. Recovery: Ambil nilai ekonomi.</p>
+      <h3 class="text-xl font-semibold mb-2">Infografis Alur 3R</h3>
+      <div class="infographic">
+        <p class="text-center bg-green-100 p-4 rounded-lg">
+          <strong>Alur 3R (Konseptual)</strong><br/>
+          1. Reduce: Kurangi penggunaan → 2. Reuse: Gunakan kembali → 3. Recycle: Daur ulang.
+        </p>
       </div>
-    </div>
+    </section>
 
-    <!-- Pembahasan 3: Inovasi Talas -->
-    <div id="inovasi-talas" class="section">
-      <h2>Inovasi: Biodegradable Food Packaging Berbasis Lilin Daun Talas</h2>
-      <h3>Penjelasan</h3>
-      <p>Kemasan biodegradable berbasis lilin daun talas adalah solusi inovatif untuk mengatasi pencemaran limbah plastik, terutama kertas bungkus nasi berlaminasi plastik. Kemasan ini memiliki sifat <strong>biodegradable</strong> (terurai 68,74% dalam 9 hari di tanah kompos), <strong>hidrofobik</strong> (100% anti-air berkat efek lotus), dan <strong>antimikroba</strong> (flavonoid, saponin melindungi makanan dari bakteri/jamur).</p>
-      <p><strong>Prosedur Pembuatan</strong>: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, lalu diuji ketahanan (suhu 0–60°C, kelembapan 50–90%). Kemasan ini tahan suhu dan kelembapan, cocok untuk makanan seperti nasi.</p>
-      
-      <h3>Data</h3>
-      <table class="data-table" id="talasTable">
+    <section id="inovasi-talas" class="section">
+      <h2 class="text-2xl font-bold mb-4 text-green-700">Inovasi: Biodegradable Food Packaging Berbasis Lilin Daun Talas</h2>
+      <h3 class="text-xl font-semibold mb-2">Penjelasan</h3>
+      <p class="text-gray-700 mb-4">
+        Kemasan biodegradable berbasis lilin daun talas adalah solusi inovatif untuk mengatasi pencemaran limbah plastik, terutama kertas bungkus nasi berlaminasi plastik. Prosedur Pembuatan: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, lalu diuji ketahanan (suhu 0–60°C, kelembapan 50–90%). Kemasan ini tahan suhu dan kelembapan, cocok untuk makanan seperti nasi.
+      </p>
+      <h3 class="text-xl font-semibold mb-2">Sifat Kemasan Talas</h3>
+      <table class="table">
         <thead>
           <tr>
             <th>Kategori</th>
-            <th>Subkategori</th>
             <th>Jumlah</th>
             <th>Keterangan</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Kemasan Talas</td><td>Biodegradabilitas</td><td>68,74% dalam 9 hari</td><td>Berbasis tanah kompos</td></tr>
-          <tr><td>Kemasan Talas</td><td>Sifat Hidrofobik</td><td>100% anti-air</td><td>Efek lotus</td></tr>
-          <tr><td>Kemasan Talas</td><td>Antimikroba</td><td>Flavonoid, saponin</td><td>Melindungi makanan</td></tr>
-          <tr><td>Degradasi</td><td>Hari 1</td><td>18,46%</td><td>Awal degradasi</td></tr>
-          <tr><td>Degradasi</td><td>Hari 9</td><td>68,74%</td><td>Terurai signifikan</td></tr>
-          <tr><td>Sifat Mekanik</td><td>Tanpa Degradasi</td><td>26,28 MPa</td><td>Modulus simpan</td></tr>
-          <tr><td>Sifat Mekanik</td><td>Hari 9</td><td>15,21 MPa</td><td>Lebih rapuh</td></tr>
+          <tr><td>Biodegradabilitas</td><td>68,74% dalam 9 hari</td><td>Berbasis tanah kompos</td></tr>
+          <tr><td>Hidrofobik</td><td>100% anti-air</td><td>Efek lotus</td></tr>
+          <tr><td>Antimikroba</td><td>Flavonoid, saponin</td><td>Melindungi makanan</td></tr>
         </tbody>
       </table>
-      
-      <h3>Infografis</h3>
-      <div class="chart-container">
-        <canvas id="talasBarChart"></canvas>
+      <h3 class="text-xl font-semibold mb-2">Tingkat Degradasi Kemasan Talas</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th>Hari</th>
+            <th>Jumlah</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Degradasi</td><td>Hari 1</td><td>18,46%</td><td>Awal degradasi</td></tr>
+          <tr><td>Degradasi</td><td>Hari 9</td><td>68,74%</td><td>Terurai signifikan</td></tr>
+        </tbody>
+      </table>
+      <h3 class="text-xl font-semibold mb-2">Kandungan Lignoselulosa</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Bahan</th>
+            <th>Selulosa</th>
+            <th>Hemiselulosa</th>
+            <th>Lignin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Jagung</td><td>43%</td><td>24%</td><td>17,50%</td></tr>
+          <tr><td>Singkong</td><td>68%</td><td>21%</td><td>13,42%</td></tr>
+          <tr><td>Talas</td><td>40%</td><td>36%</td><td>24,05%</td></tr>
+        </tbody>
+      </table>
+      <div id="lignoselulosa-chart"></div>
+      <h3 class="text-xl font-semibold mb-2">Perbandingan Lama Dekomposisi</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th>Jumlah</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Polipropilena</td><td>200 hari</td><td>Konvensional</td></tr>
+          <tr><td>Kemasan Talas</td><td>9 hari</td><td>Biodegradable</td></tr>
+        </tbody>
+      </table>
+      <div id="dekomposisi-chart"></div>
+      <h3 class="text-xl font-semibold mb-2">Pengaruh Biodegradable terhadap Timbulan Sampah</h3>
+      <div id="biodegradable-chart"></div>
+      <h3 class="text-xl font-semibold mb-2">Hipotesis</h3>
+      <p class="text-gray-700 mb-4">
+        Jika kemasan biodegradable berbasis lilin daun talas diterapkan secara luas sebagai pengganti kemasan plastik konvensional, maka limbah plastik di lingkungan dapat berkurang secara signifikan karena sifat biodegradable-nya yang mampu terurai hingga 68,74% dalam 9 hari, sifat hidrofobik 100% anti-air, dan sifat antimikroba yang melindungi makanan dari bakteri/jamur.
+      </p>
+      <h3 class="text-xl font-semibold mb-2">Harapan</h3>
+      <p class="text-gray-700 mb-4">
+        Inovasi ini diharapkan dapat menjadi alternatif utama untuk kemasan makanan di Indonesia, mengurangi ketergantungan pada plastik sekali pakai, dan menekan timbulan sampah plastik hingga 10% dalam 5 tahun ke depan. Selain itu, diharapkan dapat meningkatkan kesadaran masyarakat terhadap pentingnya produk ramah lingkungan dan mendorong industri untuk mengadopsi solusi biodegradable serupa.
+      </p>
+      <h3 class="text-xl font-semibold mb-2">Infografis Proses Pembuatan Kemasan Talas</h3>
+      <div class="infographic">
+        <p class="text-center bg-green-100 p-4 rounded-lg">
+          <strong>Proses Pembuatan Kemasan Talas</strong><br/>
+          1. Ekstraksi lilin daun talas → 2. Pelapisan kertas cokelat → 3. Pengujian (suhu, kelembapan, biodegradabilitas) → 4. Produksi kemasan.
+        </p>
       </div>
-      <div class="diagram">
-        <h4>Proses Pembuatan Kemasan Talas</h4>
-        <p>1. Ekstraksi lilin daun talas → 2. Pelapisan kertas cokelat → 3. Pengujian (suhu, kelembapan, biodegradabilitas) → 4. Produksi kemasan.</p>
-      </div>
-    </div>
+    </section>
 
-    <!-- Kesimpulan -->
-    <div id="kesimpulan" class="section">
-      <h2>Kesimpulan</h2>
-      <p>Limbah plastik, termasuk mikroplastik, telah menjadi ancaman serius bagi lingkungan dan kesehatan manusia, dengan Indonesia menyumbang 5,4 juta ton per tahun. Pendekatan <strong>3R (Reduce, Reuse, Recycle)</strong> menawarkan solusi praktis untuk mengurangi dampaknya, seperti membawa wadah sendiri, mengubah botol plastik menjadi pot bunga, atau mendaur ulang ke bank sampah. Inovasi kemasan biodegradable berbasis lilin daun talas menjadi terobosan, dengan kemampuan terurai hingga 68,74% dalam 9 hari, sifat hidrofobik, dan antimikroba, menjadikannya alternatif ramah lingkungan untuk kertas laminasi plastik.</p>
-      <p><strong>Ayo terapkan gaya hidup eco-friendly!</strong> Mulai dari langkah kecil seperti mengurangi plastik sekali pakai, mendukung produk biodegradable seperti kemasan talas, hingga aktif mendaur ulang. Bersama, kita bisa menjaga ekosistem untuk generasi mendatang.</p>
+    <section id="kesimpulan" class="section">
+      <h2 class="text-2xl font-bold mb-4 text-green-700">Kesimpulan</h2>
+      <h3 class="text-xl font-semibold mb-2">Ringkasan Masalah</h3>
+      <p class="text-gray-700 mb-4">
+        Limbah plastik merupakan ancaman serius bagi lingkungan dan kesehatan manusia. Indonesia menyumbang 5,4 juta ton limbah plastik per tahun, menjadikannya penyumbang terbesar kedua di dunia. Mikroplastik mencemari tanah, air, dan fauna, dengan distribusi tertinggi di sedimen (32,61%) dan makanan (30,43%), serta memiliki risiko karsinogenik bagi manusia.
+      </p>
+      <h3 class="text-xl font-semibold mb-2">Solusi yang Ditawarkan</h3>
+      <p class="text-gray-700 mb-4">
+        Pendekatan 3R (Reduce, Reuse, Recycle) memberikan solusi praktis untuk mengurangi dampak limbah plastik. Reduce dapat dilakukan dengan membawa wadah sendiri, Reuse dengan mengubah botol plastik menjadi pot bunga, dan Recycle dengan menyerahkan plastik ke bank sampah untuk didaur ulang menjadi kresek atau pot hitam.
+      </p>
+      <h3 class="text-xl font-semibold mb-2">Inovasi Daun Talas</h3>
+      <p class="text-gray-700 mb-4">
+        Inovasi kemasan biodegradable berbasis lilin daun talas menawarkan terobosan dengan kemampuan terurai hingga 68,74% dalam 9 hari, sifat hidrofobik 100% anti-air, dan antimikroba untuk melindungi makanan. Kemasan ini memiliki potensi untuk mengurangi timbulan sampah plastik hingga 10% jika diterapkan secara luas.
+      </p>
+      <h3 class="text-xl font-semibold mb-2">Ajakan Bertindak</h3>
+      <p class="text-gray-700 mb-4">
+        Mari kita mulai dari langkah kecil: kurangi penggunaan plastik sekali pakai, dukung produk biodegradable seperti kemasan talas, dan aktif mendaur ulang. Bersama, kita dapat menjaga ekosistem untuk generasi mendatang dengan menerapkan gaya hidup eco-friendly.
+      </p>
+    </section>
+  </main>
+
+  <div id="chatbot-bubble" class="chatbot-bubble">
+    <span class="text-white text-2xl">💬</span>
+  </div>
+  <div id="chatbot" class="chatbot">
+    <div class="flex justify-between items-center">
+      <span class="text-white">Eco-Chatbot</span>
+      <button id="close-chatbot" class="text-white">X</button>
     </div>
+    <input type="text" placeholder="Ketik pesan..." class="w-full p-2 mt-2 rounded"/>
+    <button class="bg-green-600 text-white p-2 mt-2 rounded w-full">Kirim</button>
   </div>
 
-  <!-- Chatbot -->
-  <button class="chatbot-toggle" onclick="toggleChatbot()">?</button>
-  <div class="chatbot" id="chatbot">
-    <div class="chatbot-header">
-      <span>Eco-Chatbot</span>
-      <button onclick="toggleChatbot()">X</button>
-    </div>
-    <div class="chatbot-body" id="chatbotBody"></div>
-    <div class="chatbot-input">
-      <input type="text" id="chatbotInput" placeholder="Tanya tentang limbah, 3R, atau talas...">
-      <button onclick="sendMessage()">Kirim</button>
-    </div>
-  </div>
+  <script type="text/babel">
+    const { useEffect } = React;
 
-  <script>
-    // Data dari PDF
-    const masalahData = [
-      { kategori: "Limbah Plastik", subkategori: "Global", jumlah: "100 juta ton/tahun", keterangan: "Meningkat setiap tahun" },
-      { kategori: "Limbah Plastik", subkategori: "Indonesia", jumlah: "5,4 juta ton/tahun", keterangan: "Peringkat 2 dunia" },
-      { kategori: "Limbah Plastik", subkategori: "Nasional (2024)", jumlah: "31,9 juta ton", keterangan: "75% organik, 25% anorganik" },
-      { kategori: "Mikroplastik", subkategori: "Dampak", jumlah: "-", keterangan: "Cemari tanah, air, fauna; risiko karsinogenik" }
-    ];
-    const solusiData = [
-      { kategori: "Reduce", contoh: "Bawa wadah/tas belanja", manfaat: "Kurangi plastik sekali pakai" },
-      { kategori: "Reuse", contoh: "Botol jadi pot bunga", manfaat: "Perpanjang umur plastik" },
-      { kategori: "Recycle", contoh: "Serahkan ke bank sampah", manfaat: "Jadi kresek/pot hitam" },
-      { kategori: "Recovery", contoh: "Jual PET/HDPE", manfaat: "Nilai ekonomi, kurangi timbunan" }
-    ];
-    const talasData = [
-      { kategori: "Kemasan Talas", subkategori: "Biodegradabilitas", jumlah: "68,74% dalam 9 hari", keterangan: "Berbasis tanah kompos" },
-      { kategori: "Kemasan Talas", subkategori: "Sifat Hidrofobik", jumlah: "100% anti-air", keterangan: "Efek lotus" },
-      { kategori: "Kemasan Talas", subkategori: "Antimikroba", jumlah: "Flavonoid, saponin", keterangan: "Melindungi makanan" },
-      { kategori: "Degradasi", subkategori: "Hari 1", jumlah: "18,46%", keterangan: "Awal degradasi" },
-      { kategori: "Degradasi", subkategori: "Hari 9", jumlah: "68,74%", keterangan: "Terurai signifikan" },
-      { kategori: "Sifat Mekanik", subkategori: "Tanpa Degradasi", jumlah: "26,28 MPa", keterangan: "Modulus simpan" },
-      { kategori: "Sifat Mekanik", subkategori: "Hari 9", jumlah: "15,21 MPa", keterangan: "Lebih rapuh" }
+    const formatNumber = (num) => {
+      if (typeof num !== 'number' || isNaN(num)) return '0';
+      if (num >= 1e6) return (num / 1e6).toFixed(1) + ' Juta';
+      if (num >= 1e3) return (num / 1e3).toFixed(1) + ' Ribu';
+      return num.toFixed(1);
+    };
+
+    const typeData = [
+      { name: 'Sisa Makanan', value: 39.9 },
+      { name: 'Plastik', value: 18.6 },
+      { name: 'Kertas', value: 11.6 },
+      { name: 'Kayu', value: 13.0 },
+      { name: 'Logam', value: 3.2 },
+      { name: 'Kaca', value: 6.9 },
+      { name: 'Lainnya', value: 6.8 }
     ];
 
-    // Toggle Sidebar
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.classList.toggle("active");
-    }
+    const sourceData = [
+      { name: 'Rumah Tangga', value: 1500000 },
+      { name: 'Perkantoran', value: 500000 },
+      { name: 'Pasar', value: 700000 },
+      { name: 'Perniagaan', value: 300000 },
+      { name: 'Fasilitas Umum', value: 200000 },
+      { name: 'Kawasan', value: 400000 },
+      { name: 'Lainnya', value: 600000 }
+    ];
 
-    // Smooth Scroll
-    document.querySelectorAll('.sidebar a').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href').substring(1);
-        const target = document.getElementById(targetId);
-        window.scrollTo({
-          top: target.offsetTop - 20,
-          behavior: 'smooth'
-        });
-      });
-    });
+    const timbulanTrend = [
+      { year: 2018, timbulan: 54830, penanganan: 21608 },
+      { year: 2019, timbulan: 27618317, penanganan: 11487192 },
+      { year: 2020, timbulan: 27592603, penanganan: 13278686 },
+      { year: 2021, timbulan: 28591323, penanganan: 13511012 },
+      { year: 2022, timbulan: 38710014, penanganan: 18812922 },
+      { year: 2023, timbulan: 43231282, penanganan: 20199475 },
+      { year: 2024, timbulan: 25723513, penanganan: 11985015 }
+    ];
 
-    // Animate Sections
-    const sections = document.querySelectorAll('.section');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    sections.forEach(section => observer.observe(section));
+    const mikroplastikData = [
+      { name: 'Sedimen', value: 32.61 },
+      { name: 'Makanan', value: 30.43 },
+      { name: 'Laut', value: 19.57 },
+      { name: 'Sungai', value: 17.39 },
+      { name: 'Limbah', value: 8.70 },
+      { name: 'Udara', value: 4.35 },
+      { name: 'Danau', value: 4.35 }
+    ];
 
-    // Render Tables
-    function renderTable(tableId, data) {
-      const table = document.getElementById(tableId);
-      const thead = table.querySelector('thead');
-      const tbody = table.querySelector('tbody');
-      thead.innerHTML = '';
-      tbody.innerHTML = '';
-      const headers = Object.keys(data[0]);
-      const headerRow = document.createElement('tr');
-      headers.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      data.forEach(item => {
-        const row = document.createElement('tr');
-        headers.forEach(header => {
-          const td = document.createElement('td');
-          td.textContent = item[header];
-          row.appendChild(td);
-        });
-        tbody.appendChild(row);
-      });
-    }
+    const lignoselulosaData = [
+      { name: 'Jagung-Selulosa', value: 43 },
+      { name: 'Jagung-Hemiselulosa', value: 24 },
+      { name: 'Jagung-Lignin', value: 17.50 },
+      { name: 'Singkong-Selulosa', value: 68 },
+      { name: 'Singkong-Hemiselulosa', value: 21 },
+      { name: 'Singkong-Lignin', value: 13.42 },
+      { name: 'Talas-Selulosa', value: 40 },
+      { name: 'Talas-Hemiselulosa', value: 36 },
+      { name: 'Talas-Lignin', value: 24.05 }
+    ];
 
-    // Render Charts
-    function renderCharts() {
-      // Masalah: Bar Chart
-      const ctxMasalahBar = document.getElementById("masalahBarChart").getContext("2d");
-      new Chart(ctxMasalahBar, {
-        type: "bar",
-        data: {
-          labels: masalahData.map(item => item.subkategori),
-          datasets: [{
-            label: "Jumlah",
-            data: masalahData.map(item => parseFloat(item.jumlah) || 0),
-            backgroundColor: "#4caf50",
-            borderColor: "#388e3c",
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          animation: { duration: 1000, easing: 'easeOutBounce' },
-          plugins: { title: { display: true, text: "Limbah Plastik", color: "#2e7d32", font: { size: 18 } } },
-          scales: { y: { beginAtZero: true, ticks: { color: "#333" } }, x: { ticks: { color: "#333" } } }
-        }
-      });
+    const dekomposisiData = [
+      { name: 'Polipropilena', value: 200 },
+      { name: 'Kemasan Talas', value: 9 }
+    ];
 
-      // Masalah: Pie Chart
-      const ctxMasalahPie = document.getElementById("masalahPieChart").getContext("2d");
-      new Chart(ctxMasalahPie, {
-        type: "pie",
-        data: {
-          labels: ["Sampah Organik", "Sampah Anorganik"],
-          datasets: [{ data: [75, 25], backgroundColor: ["#4caf50", "#ff6347"], borderColor: ["#ffffff", "#ffffff"], borderWidth: 1 }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { position: "top", labels: { color: "#333", font: { size: 14 } } },
-            title: { display: true, text: "Komposisi Sampah Nasional (2024)", color: "#2e7d32", font: { size: 18 } }
-          }
-        }
-      });
+    const biodegradableTrend = [
+      { year: 2018, timbulan: 54830, biodegradable: 49347.036 },
+      { year: 2019, timbulan: 27618317, biodegradable: 24856485.400 },
+      { year: 2020, timbulan: 27592603, biodegradable: 24833342.900 },
+      { year: 2021, timbulan: 28591323, biodegradable: 25732190.840 },
+      { year: 2022, timbulan: 38710014, biodegradable: 34687128.390 },
+      { year: 2023, timbulan: 43231282, biodegradable: 38572219.260 },
+      { year: 2024, timbulan: 25723513, biodegradable: 23856452.270 }
+    ];
 
-      // Inovasi Talas: Bar Chart
-      const ctxTalasBar = document.getElementById("talasBarChart").getContext("2d");
-      new Chart(ctxTalasBar, {
-        type: "bar",
-        data: {
-          labels: ["Hari 1", "Hari 3", "Hari 5", "Hari 7", "Hari 9"],
-          datasets: [{
-            label: "Persentase Degradasi",
-            data: [18.46, 32.80, 53.79, 59.52, 68.74],
-            backgroundColor: "#4caf50",
-            borderColor: "#388e3c",
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          animation: { duration: 1000, easing: 'easeOutBounce' },
-          plugins: { title: { display: true, text: "Degradasi Kemasan Talas", color: "#2e7d32", font: { size: 18 } } },
-          scales: { y: { beginAtZero: true, ticks: { color: "#333" } }, x: { ticks: { color: "#333" } } }
-        }
-      });
-    }
+    const KomposisiChart = () => (
+      <div className="chart-container">
+        <Recharts.ResponsiveContainer width="100%" height={400}>
+          <Recharts.PieChart>
+            <Recharts.Pie
+              data={typeData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={150}
+              label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
+            >
+              {typeData.map((entry, index) => (
+                <Recharts.Cell key={`cell-${index}`} fill={['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#6B7280', '#9CA3AF', '#D1D5DB'][index % 7]} />
+              ))}
+            </Recharts.Pie>
+            <Recharts.Tooltip formatter={(value) => value + '%'} />
+            <Recharts.Legend />
+          </Recharts.PieChart>
+        </Recharts.ResponsiveContainer>
+      </div>
+    );
 
-    // Chatbot
-    function toggleChatbot() {
-      const chatbot = document.getElementById("chatbot");
-      chatbot.classList.toggle("active");
-      const toggleBtn = document.querySelector(".chatbot-toggle");
-      toggleBtn.style.display = chatbot.classList.contains("active") ? "none" : "block";
-    }
+    const SumberChart = () => (
+      <div className="chart-container">
+        <Recharts.ResponsiveContainer width="100%" height={400}>
+          <Recharts.BarChart data={sourceData}>
+            <Recharts.CartesianGrid strokeDasharray="3 3" />
+            <Recharts.XAxis dataKey="name" style={{ fontSize: 12 }} />
+            <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: 12 }} />
+            <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
+            <Recharts.Legend />
+            <Recharts.Bar dataKey="value" fill="#10B981" name="Sumber Sampah" />
+          </Recharts.BarChart>
+        </Recharts.ResponsiveContainer>
+      </div>
+    );
 
-    function sendMessage() {
-      const input = document.getElementById("chatbotInput");
-      const body = document.getElementById("chatbotBody");
-      const question = input.value.toLowerCase().trim();
-      if (!question) return;
+    const TrenChart = () => (
+      <div className="chart-container">
+        <Recharts.ResponsiveContainer width="100%" height={400}>
+          <Recharts.AreaChart data={timbulanTrend}>
+            <Recharts.CartesianGrid strokeDasharray="3 3" />
+            <Recharts.XAxis dataKey="year" style={{ fontSize: 12 }} />
+            <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: 12 }} />
+            <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
+            <Recharts.Legend />
+            <Recharts.Area type="monotone" dataKey="timbulan" stroke="#10B981" fill="#A7F3D0" name="Timbulan Sampah" />
+            <Recharts.Area type="monotone" dataKey="penanganan" stroke="#34D399" fill="#6EE7B7" name="Penanganan Sampah" />
+          </Recharts.AreaChart>
+        </Recharts.ResponsiveContainer>
+      </div>
+    );
 
-      const userMessage = document.createElement("div");
-      userMessage.className = "message user";
-      userMessage.textContent = question;
-      body.appendChild(userMessage);
+    const MikroplastikChart = () => (
+      <div className="chart-container">
+        <Recharts.ResponsiveContainer width="100%" height={400}>
+          <Recharts.BarChart data={mikroplastikData}>
+            <Recharts.CartesianGrid strokeDasharray="3 3" />
+            <Recharts.XAxis dataKey="name" style={{ fontSize: 12 }} />
+            <Recharts.YAxis style={{ fontSize: 12 }} />
+            <Recharts.Tooltip formatter={(value) => value + '%'} />
+            <Recharts.Legend />
+            <Recharts.Bar dataKey="value" fill="#10B981" name="Mikroplastik" />
+          </Recharts.BarChart>
+        </Recharts.ResponsiveContainer>
+      </div>
+    );
 
-      let answer = "Maaf, saya tidak tahu jawabannya.";
-      if (question.includes("mikroplastik")) {
-        answer = "Mikroplastik adalah partikel plastik <5 mm dari degradasi plastik atau produk seperti kosmetik. Cemari tanah, air, fauna, masuk rantai makanan, berpotensi karsinogenik (DEHA, PCB).";
-      } else if (question.includes("limbah") || question.includes("sampah")) {
-        answer = "Indonesia menghasilkan 5,4 juta ton limbah plastik/tahun (peringkat 2 dunia). Global: 100 juta ton/tahun. Nasional (2024): 31,9 juta ton (75% organik, 25% anorganik).";
-      } else if (question.includes("3r") || question.includes("reduce") || question.includes("reuse") || question.includes("recycle")) {
-        answer = "3R adalah Reduce (bawa wadah sendiri), Reuse (botol jadi pot bunga), Recycle (daur ulang ke bank sampah). Recovery: Jual PET/HDPE untuk nilai ekonomi.";
-      } else if (question.includes("contoh") && question.includes("reuse")) {
-        answer = "Contoh reuse: Potong botol plastik jadi pot bunga, cat, isi tanah. Atau jadikan tempat pensil dari botol bekas.";
-      } else if (question.includes("talas")) {
-        answer = "Kemasan talas biodegradable (68,74% terurai dalam 9 hari), hidrofobik (100% anti-air), antimikroba (flavonoid, saponin). Cocok untuk bungkus nasi.";
-      } else if (question.includes("proses") && question.includes("talas")) {
-        answer = "Proses pembuatan kemasan talas: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, diuji ketahanan (suhu 0–60°C, kelembapan 50–90%).";
-      } else if (question.includes("recovery")) {
-        answer = "Recovery adalah mengambil plastik bernilai ekonomi (PET, HDPE) untuk produksi ulang, mengurangi timbunan sampah.";
-      }
+    const LignoselulosaChart = () => (
+      <div className="chart-container">
+        <Recharts.ResponsiveContainer width="100%" height={400}>
+          <Recharts.BarChart data={lignoselulosaData}>
+            <Recharts.CartesianGrid strokeDasharray="3 3" />
+            <Recharts.XAxis dataKey="name" style={{ fontSize: 12 }} />
+            <Recharts.YAxis style={{ fontSize: 12 }} />
+            <Recharts.Tooltip formatter={(value) => value + '%'} />
+            <Recharts.Legend />
+            <Recharts.Bar dataKey="value" fill="#34D399" name="Kandungan Lignoselulosa" />
+          </Recharts.BarChart>
+        </Recharts.ResponsiveContainer>
+      </div>
+    );
 
-      const botMessage = document.createElement("div");
-      botMessage.className = "message bot";
-      botMessage.textContent = answer;
-      body.appendChild(botMessage);
+    const DekomposisiChart = () => (
+      <div className="chart-container">
+        <Recharts.ResponsiveContainer width="100%" height={400}>
+          <Recharts.BarChart data={dekomposisiData}>
+            <Recharts.CartesianGrid strokeDasharray="3 3" />
+            <Recharts.XAxis dataKey="name" style={{ fontSize: 12 }} />
+            <Recharts.YAxis style={{ fontSize: 12 }} />
+            <Recharts.Tooltip formatter={(value) => value + ' Hari'} />
+            <Recharts.Legend />
+            <Recharts.Bar dataKey="value" fill="#10B981" name="Lama Dekomposisi" />
+          </Recharts.BarChart>
+        </Recharts.ResponsiveContainer>
+      </div>
+    );
 
-      body.scrollTop = body.scrollHeight;
-      input.value = "";
-    }
+    const BiodegradableChart = () => (
+      <div className="chart-container">
+        <Recharts.ResponsiveContainer width="100%" height={400}>
+          <Recharts.LineChart data={biodegradableTrend}>
+            <Recharts.CartesianGrid strokeDasharray="3 3" />
+            <Recharts.XAxis dataKey="year" style={{ fontSize: 12 }} />
+            <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: 12 }} />
+            <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
+            <Recharts.Legend />
+            <Recharts.Line type="monotone" dataKey="timbulan" stroke="#10B981" name="Timbulan Sampah" />
+            <Recharts.Line type="monotone" dataKey="biodegradable" stroke="#34D399" name="10% Biodegradable" />
+          </Recharts.LineChart>
+        </Recharts.ResponsiveContainer>
+      </div>
+    );
 
-    document.getElementById("chatbotInput").addEventListener("keypress", (e) => {
-      if (e.key === "Enter") sendMessage();
-    });
+    const renderCharts = () => {
+      ReactDOM.render(<KomposisiChart />, document.getElementById('komposisi-chart'));
+      ReactDOM.render(<SumberChart />, document.getElementById('sumber-chart'));
+      ReactDOM.render(<TrenChart />, document.getElementById('tren-chart'));
+      ReactDOM.render(<MikroplastikChart />, document.getElementById('mikroplastik-chart'));
+      ReactDOM.render(<LignoselulosaChart />, document.getElementById('lignoselulosa-chart'));
+      ReactDOM.render(<DekomposisiChart />, document.getElementById('dekomposisi-chart'));
+      ReactDOM.render(<BiodegradableChart />, document.getElementById('biodegradable-chart'));
+    };
 
-    // Initial Load
-    renderTable("masalahTable", masalahData);
-    renderTable("solusiTable", solusiData);
-    renderTable("talasTable", talasData);
     renderCharts();
+
+    const bubble = document.getElementById('chatbot-bubble');
+    const chatbot = document.getElementById('chatbot');
+    const closeChatbot = document.getElementById('close-chatbot');
+
+    bubble.addEventListener('click', () => {
+      bubble.style.display = 'none';
+      chatbot.classList.add('chatbot-open');
+    });
+
+    closeChatbot.addEventListener('click', () => {
+      chatbot.classList.remove('chatbot-open');
+      bubble.style.display = 'flex';
+    });
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
+    }
   </script>
 </body>
 </html>
