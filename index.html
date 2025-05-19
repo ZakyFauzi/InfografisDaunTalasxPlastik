@@ -13,30 +13,38 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chrono-node/1.3.11/chrono.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.15.0/Recharts.min.js"></script>
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #F5F5DC; margin: 0; padding-top: 60px; }
+    body { font-family: 'Inter', sans-serif; background-color: #F5F5DC; margin: 0; padding-top: 70px; }
     .section { padding: 40px 20px; }
     .chart-container { padding: 20px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
     .infographic { display: flex; justify-content: center; margin: 20px 0; }
     .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
     .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     .table th { background-color: #10B981; color: white; }
-    nav { position: fixed; top: 0; width: 100%; background-color: #14532D; color: white; z-index: 1000; }
-    main { margin-left: 0; }
-    .hamburger { position: fixed; top: 15px; left: 15px; background: none; border: none; font-size: 24px; color: white; cursor: pointer; z-index: 1001; }
-    .sidebar { width: 250px; background-color: #388e3c; color: white; position: sticky; top: 0; height: 100vh; padding: 20px; overflow-y: auto; transition: transform 0.3s ease; transform: translateX(-100%); }
+    nav { position: fixed; top: 0; width: 100%; background-color: #14532D; color: white; z-index: 1000; height: 60px; }
+    .hamburger { position: fixed; top: 15px; left: 15px; background: none; border: none; font-size: 24px; color: white; cursor: pointer; z-index: 1001; display: none; }
+    .sidebar { width: 250px; background-color: #388e3c; color: white; position: fixed; top: 0; left: 0; height: 100vh; padding: 20px; overflow-y: auto; transition: transform 0.3s ease; transform: translateX(0); z-index: 999; }
     .sidebar.open { transform: translateX(0); }
     .sidebar h2 { color: white; text-align: center; margin-bottom: 20px; }
-    .sidebar ul { list-style: none; }
+    .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li { margin: 15px 0; }
     .sidebar ul li a { color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; transition: all 0.3s; }
     .sidebar ul li a:hover { background-color: #ffeb3b; color: #388e3c; transform: scale(1.05); }
-    @media (max-width: 768px) { 
-      .sidebar { width: 200px; }
-      main { margin-left: 0; }
-    }
+    main { margin-left: 250px; transition: margin-left 0.3s ease; }
     .chatbot-bubble { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #34D399; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
     .chatbot { position: fixed; bottom: 20px; right: 20px; background: #34D399; padding: 10px; border-radius: 8px; width: 300px; display: none; }
     .chatbot-open { display: block; }
+    .chatbot-messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; padding: 10px; background: #fff; border-radius: 5px; }
+    .chatbot-message { margin: 5px 0; }
+    .chatbot-message.user { text-align: right; color: #14532D; }
+    .chatbot-message.bot { text-align: left; color: #000; }
+    @media (max-width: 768px) { 
+      .hamburger { display: block; }
+      .sidebar { width: 200px; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      main { margin-left: 0; }
+      .chart-container { height: 300px; }
+      header h1 { font-size: 1.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -89,13 +97,13 @@
         </tbody>
       </table>
       <h3 class="text-xl font-semibold mb-2">Komposisi Sampah</h3>
-      <div id="komposisi-chart"></div>
+      <div id="komposisi-chart" class="chart-container"></div>
       <h3 class="text-xl font-semibold mb-2">Sumber Sampah</h3>
-      <div id="sumber-chart"></div>
+      <div id="sumber-chart" class="chart-container"></div>
       <h3 class="text-xl font-semibold mb-2">Tren Timbulan Sampah (2018-2024)</h3>
-      <div id="tren-chart"></div>
+      <div id="tren-chart" class="chart-container"></div>
       <h3 class="text-xl font-semibold mb-2">Distribusi Mikroplastik</h3>
-      <div id="mikroplastik-chart"></div>
+      <div id="mikroplastik-chart" class="chart-container"></div>
     </section>
 
     <section id="solusi-3r" class="section">
@@ -180,7 +188,7 @@
           <tr><td>Talas</td><td>40%</td><td>36%</td><td>24,05%</td></tr>
         </tbody>
       </table>
-      <div id="lignoselulosa-chart"></div>
+      <div id="lignoselulosa-chart" class="chart-container"></div>
       <h3 class="text-xl font-semibold mb-2">Perbandingan Lama Dekomposisi</h3>
       <table class="table">
         <thead>
@@ -195,9 +203,9 @@
           <tr><td>Kemasan Talas</td><td>9 hari</td><td>Biodegradable</td></tr>
         </tbody>
       </table>
-      <div id="dekomposisi-chart"></div>
+      <div id="dekomposisi-chart" class="chart-container"></div>
       <h3 class="text-xl font-semibold mb-2">Pengaruh Biodegradable terhadap Timbulan Sampah</h3>
-      <div id="biodegradable-chart"></div>
+      <div id="biodegradable-chart" class="chart-container"></div>
       <h3 class="text-xl font-semibold mb-2">Hipotesis</h3>
       <p class="text-gray-700 mb-4">
         Jika kemasan biodegradable berbasis lilin daun talas diterapkan secara luas sebagai pengganti kemasan plastik konvensional, maka limbah plastik di lingkungan dapat berkurang secara signifikan karena sifat biodegradable-nya yang mampu terurai hingga 68,74% dalam 9 hari, sifat hidrofobik 100% anti-air, dan sifat antimikroba yang melindungi makanan dari bakteri/jamur.
@@ -244,12 +252,13 @@
       <span class="text-white">Eco-Chatbot</span>
       <button id="close-chatbot" class="text-white">X</button>
     </div>
-    <input type="text" placeholder="Ketik pesan..." class="w-full p-2 mt-2 rounded"/>
-    <button class="bg-green-600 text-white p-2 mt-2 rounded w-full">Kirim</button>
+    <div id="chatbot-messages" class="chatbot-messages"></div>
+    <input type="text" id="chatbot-input" placeholder="Ketik pesan..." class="w-full p-2 mt-2 rounded"/>
+    <button id="chatbot-send" class="bg-green-600 text-white p-2 mt-2 rounded w-full">Kirim</button>
   </div>
 
   <script type="text/babel">
-    const { useEffect } = React;
+    const { useEffect, useState } = React;
 
     const formatNumber = (num) => {
       if (typeof num !== 'number' || isNaN(num)) return '0';
@@ -456,6 +465,9 @@
     const bubble = document.getElementById('chatbot-bubble');
     const chatbot = document.getElementById('chatbot');
     const closeChatbot = document.getElementById('close-chatbot');
+    const chatbotInput = document.getElementById('chatbot-input');
+    const chatbotMessages = document.getElementById('chatbot-messages');
+    const chatbotSend = document.getElementById('chatbot-send');
 
     bubble.addEventListener('click', () => {
       bubble.style.display = 'none';
@@ -465,6 +477,39 @@
     closeChatbot.addEventListener('click', () => {
       chatbot.classList.remove('chatbot-open');
       bubble.style.display = 'flex';
+    });
+
+    const responses = [
+      "Halo! Apa yang bisa saya bantu tentang gaya hidup eco-friendly?",
+      "Tahukah kamu bahwa 3R (Reduce, Reuse, Recycle) bisa sangat membantu mengurangi limbah plastik?",
+      "Inovasi kemasan berbasis lilin daun talas bisa terurai hingga 68,74% dalam 9 hari! Keren, bukan?",
+      "Apa langkah kecil yang sudah kamu lakukan untuk mengurangi penggunaan plastik sekali pakai?"
+    ];
+
+    const addMessage = (message, sender) => {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('chatbot-message', sender);
+      messageElement.textContent = message;
+      chatbotMessages.appendChild(messageElement);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    };
+
+    chatbotSend.addEventListener('click', () => {
+      const message = chatbotInput.value.trim();
+      if (message) {
+        addMessage(message, 'user');
+        chatbotInput.value = '';
+        setTimeout(() => {
+          const botResponse = responses[Math.floor(Math.random() * responses.length)];
+          addMessage(botResponse, 'bot');
+        }, 500);
+      }
+    });
+
+    chatbotInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        chatbotSend.click();
+      }
     });
 
     function toggleSidebar() {
