@@ -479,12 +479,12 @@
       bubble.style.display = 'flex';
     });
 
-    const responses = [
-      "Halo! Apa yang bisa saya bantu tentang gaya hidup eco-friendly?",
-      "Tahukah kamu bahwa 3R (Reduce, Reuse, Recycle) bisa sangat membantu mengurangi limbah plastik?",
-      "Inovasi kemasan berbasis lilin daun talas bisa terurai hingga 68,74% dalam 9 hari! Keren, bukan?",
-      "Apa langkah kecil yang sudah kamu lakukan untuk mengurangi penggunaan plastik sekali pakai?"
-    ];
+    const responses = {
+      "dampak limbah mikroplastik": "mikroplastik adalah partikel plastik < 5 mm dari degradasi plastik atau produk seperti kosmetik. mikroplastik dapat mencemari air, tanah, hingga makanan. mikroplastik sangat berbahaya, salah satunya berpotensi karsinogenik (DEHA, PCB)",
+      "solusi 3r": "3R adalah pendekatan praktis untuk mengurangi limbah plastik. Reduce mengurangi penggunaan plastik sekali pakai, Reuse mengubah plastik bekas jadi barang berguna, dan Recycle melibatkan daur ulang ke bank sampah.",
+      "inovasi talas": "kemasan biodegradable berbasis lilin daun talas adalah solusi inovatif yang dapat terurai hingga 68,74% dalam 9 hari, tahan air, dan memiliki sifat antimikroba untuk melindungi makanan.",
+      "default": "Maaf, saya belum paham pertanyaanmu. Coba tanyakan tentang dampak limbah mikroplastik, solusi 3R, atau inovasi talas!"
+    };
 
     const addMessage = (message, sender) => {
       const messageElement = document.createElement('div');
@@ -495,13 +495,19 @@
     };
 
     chatbotSend.addEventListener('click', () => {
-      const message = chatbotInput.value.trim();
+      const message = chatbotInput.value.trim().toLowerCase();
       if (message) {
         addMessage(message, 'user');
         chatbotInput.value = '';
+        let response = responses["default"];
+        for (let key in responses) {
+          if (message.includes(key)) {
+            response = responses[key];
+            break;
+          }
+        }
         setTimeout(() => {
-          const botResponse = responses[Math.floor(Math.random() * responses.length)];
-          addMessage(botResponse, 'bot');
+          addMessage(response, 'bot');
         }, 500);
       }
     });
