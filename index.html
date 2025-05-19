@@ -15,7 +15,7 @@
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F5F5DC; margin: 0; padding-top: 70px; }
     .section { padding: 40px 20px; }
-    .chart-container { padding: 20px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .chart-container { padding: 15px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; width: 100%; overflow-x: auto; }
     .infographic { display: flex; justify-content: center; margin: 20px 0; }
     .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
     .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
@@ -42,8 +42,14 @@
       .sidebar { width: 200px; transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
       main { margin-left: 0; }
-      .chart-container { height: 300px; }
+      .chart-container { height: 300px; min-width: 600px; }
       header h1 { font-size: 1.5rem; }
+      .section { padding: 20px 10px; }
+      .table { font-size: 0.9em; }
+    }
+    @media (max-width: 480px) { 
+      .chart-container { height: 250px; min-width: 500px; }
+      .table { font-size: 0.8em; }
     }
   </style>
 </head>
@@ -334,121 +340,142 @@
       { year: 2024, timbulan: 25723513, biodegradable: 23856452.270 }
     ];
 
-    const KomposisiChart = () => (
-      <div className="chart-container">
-        <Recharts.ResponsiveContainer width="100%" height={400}>
-          <Recharts.PieChart>
-            <Recharts.Pie
-              data={typeData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={150}
-              label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
-            >
-              {typeData.map((entry, index) => (
-                <Recharts.Cell key={`cell-${index}`} fill={['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#6B7280', '#9CA3AF', '#D1D5DB'][index % 7]} />
-              ))}
-            </Recharts.Pie>
-            <Recharts.Tooltip formatter={(value) => value + '%'} />
-            <Recharts.Legend />
-          </Recharts.PieChart>
-        </Recharts.ResponsiveContainer>
-      </div>
-    );
+    const KomposisiChart = () => {
+      const isMobile = window.innerWidth <= 768;
+      return (
+        <div className="chart-container">
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
+            <Recharts.PieChart>
+              <Recharts.Pie
+                data={typeData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={isMobile ? 100 : 120}
+                label={isMobile ? false : ({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
+              >
+                {typeData.map((entry, index) => (
+                  <Recharts.Cell key={`cell-${index}`} fill={['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#6B7280', '#9CA3AF', '#D1D5DB'][index % 7]} />
+                ))}
+              </Recharts.Pie>
+              <Recharts.Tooltip formatter={(value) => value + '%'} />
+              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+            </Recharts.PieChart>
+          </Recharts.ResponsiveContainer>
+        </div>
+      );
+    };
 
-    const SumberChart = () => (
-      <div className="chart-container">
-        <Recharts.ResponsiveContainer width="100%" height={400}>
-          <Recharts.BarChart data={sourceData}>
-            <Recharts.CartesianGrid strokeDasharray="3 3" />
-            <Recharts.XAxis dataKey="name" style={{ fontSize: 12 }} />
-            <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: 12 }} />
-            <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-            <Recharts.Legend />
-            <Recharts.Bar dataKey="value" fill="#10B981" name="Sumber Sampah" />
-          </Recharts.BarChart>
-        </Recharts.ResponsiveContainer>
-      </div>
-    );
+    const SumberChart = () => {
+      const isMobile = window.innerWidth <= 768;
+      return (
+        <div className="chart-container">
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
+            <Recharts.BarChart data={sourceData} margin={{ top: 20, right: 20, left: 0, bottom: 40 }}>
+              <Recharts.CartesianGrid strokeDasharray="3 3" />
+              <Recharts.XAxis dataKey="name" angle={isMobile ? -60 : -45} textAnchor="end" height={80} style={{ fontSize: isMobile ? 10 : 12 }} interval={0} />
+              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
+              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Bar dataKey="value" fill="#10B981" name="Sumber Sampah" />
+            </Recharts.BarChart>
+          </Recharts.ResponsiveContainer>
+        </div>
+      );
+    };
 
-    const TrenChart = () => (
-      <div className="chart-container">
-        <Recharts.ResponsiveContainer width="100%" height={400}>
-          <Recharts.AreaChart data={timbulanTrend}>
-            <Recharts.CartesianGrid strokeDasharray="3 3" />
-            <Recharts.XAxis dataKey="year" style={{ fontSize: 12 }} />
-            <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: 12 }} />
-            <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-            <Recharts.Legend />
-            <Recharts.Area type="monotone" dataKey="timbulan" stroke="#10B981" fill="#A7F3D0" name="Timbulan Sampah" />
-            <Recharts.Area type="monotone" dataKey="penanganan" stroke="#34D399" fill="#6EE7B7" name="Penanganan Sampah" />
-          </Recharts.AreaChart>
-        </Recharts.ResponsiveContainer>
-      </div>
-    );
+    const TrenChart = () => {
+      const isMobile = window.innerWidth <= 768;
+      return (
+        <div className="chart-container">
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
+            <Recharts.AreaChart data={timbulanTrend} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+              <Recharts.CartesianGrid strokeDasharray="3 3" />
+              <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
+              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Area type="monotone" dataKey="timbulan" stroke="#10B981" fill="#A7F3D0" name="Timbulan Sampah" />
+              <Recharts.Area type="monotone" dataKey="penanganan" stroke="#34D399" fill="#6EE7B7" name="Penanganan Sampah" />
+            </Recharts.AreaChart>
+          </Recharts.ResponsiveContainer>
+        </div>
+      );
+    };
 
-    const MikroplastikChart = () => (
-      <div className="chart-container">
-        <Recharts.ResponsiveContainer width="100%" height={400}>
-          <Recharts.BarChart data={mikroplastikData}>
-            <Recharts.CartesianGrid strokeDasharray="3 3" />
-            <Recharts.XAxis dataKey="name" style={{ fontSize: 12 }} />
-            <Recharts.YAxis style={{ fontSize: 12 }} />
-            <Recharts.Tooltip formatter={(value) => value + '%'} />
-            <Recharts.Legend />
-            <Recharts.Bar dataKey="value" fill="#10B981" name="Mikroplastik" />
-          </Recharts.BarChart>
-        </Recharts.ResponsiveContainer>
-      </div>
-    );
+    const MikroplastikChart = () => {
+      const isMobile = window.innerWidth <= 768;
+      return (
+        <div className="chart-container">
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
+            <Recharts.BarChart data={mikroplastikData} margin={{ top: 20, right: 20, left: 0, bottom: 40 }}>
+              <Recharts.CartesianGrid strokeDasharray="3 3" />
+              <Recharts.XAxis dataKey="name" angle={isMobile ? -60 : -45} textAnchor="end" height={80} style={{ fontSize: isMobile ? 10 : 12 }} interval={0} />
+              <Recharts.YAxis style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.Tooltip formatter={(value) => value + '%'} />
+              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Bar dataKey="value" fill="#10B981" name="Mikroplastik" />
+            </Recharts.BarChart>
+          </Recharts.ResponsiveContainer>
+        </div>
+      );
+    };
 
-    const LignoselulosaChart = () => (
-      <div className="chart-container">
-        <Recharts.ResponsiveContainer width="100%" height={400}>
-          <Recharts.BarChart data={lignoselulosaData}>
-            <Recharts.CartesianGrid strokeDasharray="3 3" />
-            <Recharts.XAxis dataKey="name" style={{ fontSize: 12 }} />
-            <Recharts.YAxis style={{ fontSize: 12 }} />
-            <Recharts.Tooltip formatter={(value) => value + '%'} />
-            <Recharts.Legend />
-            <Recharts.Bar dataKey="value" fill="#34D399" name="Kandungan Lignoselulosa" />
-          </Recharts.BarChart>
-        </Recharts.ResponsiveContainer>
-      </div>
-    );
+    const LignoselulosaChart = () => {
+      const isMobile = window.innerWidth <= 768;
+      return (
+        <div className="chart-container">
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
+            <Recharts.BarChart data={lignoselulosaData} margin={{ top: 20, right: 20, left: 0, bottom: 60 }}>
+              <Recharts.CartesianGrid strokeDasharray="3 3" />
+              <Recharts.XAxis dataKey="name" angle={isMobile ? -60 : -45} textAnchor="end" height={100} style={{ fontSize: isMobile ? 10 : 12 }} interval={0} />
+              <Recharts.YAxis style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.Tooltip formatter={(value) => value + '%'} />
+              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Bar dataKey="value" fill="#34D399" name="Kandungan Lignoselulosa" />
+            </Recharts.BarChart>
+          </Recharts.ResponsiveContainer>
+        </div>
+      );
+    };
 
-    const DekomposisiChart = () => (
-      <div className="chart-container">
-        <Recharts.ResponsiveContainer width="100%" height={400}>
-          <Recharts.BarChart data={dekomposisiData}>
-            <Recharts.CartesianGrid strokeDasharray="3 3" />
-            <Recharts.XAxis dataKey="name" style={{ fontSize: 12 }} />
-            <Recharts.YAxis style={{ fontSize: 12 }} />
-            <Recharts.Tooltip formatter={(value) => value + ' Hari'} />
-            <Recharts.Legend />
-            <Recharts.Bar dataKey="value" fill="#10B981" name="Lama Dekomposisi" />
-          </Recharts.BarChart>
-        </Recharts.ResponsiveContainer>
-      </div>
-    );
+    const DekomposisiChart = () => {
+      const isMobile = window.innerWidth <= 768;
+      return (
+        <div className="chart-container">
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
+            <Recharts.BarChart data={dekomposisiData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+              <Recharts.CartesianGrid strokeDasharray="3 3" />
+              <Recharts.XAxis dataKey="name" style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.YAxis style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.Tooltip formatter={(value) => value + ' Hari'} />
+              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Bar dataKey="value" fill="#10B981" name="Lama Dekomposisi" />
+            </Recharts.BarChart>
+          </Recharts.ResponsiveContainer>
+        </div>
+      );
+    };
 
-    const BiodegradableChart = () => (
-      <div className="chart-container">
-        <Recharts.ResponsiveContainer width="100%" height={400}>
-          <Recharts.LineChart data={biodegradableTrend}>
-            <Recharts.CartesianGrid strokeDasharray="3 3" />
-            <Recharts.XAxis dataKey="year" style={{ fontSize: 12 }} />
-            <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: 12 }} />
-            <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-            <Recharts.Legend />
-            <Recharts.Line type="monotone" dataKey="timbulan" stroke="#10B981" name="Timbulan Sampah" />
-            <Recharts.Line type="monotone" dataKey="biodegradable" stroke="#34D399" name="10% Biodegradable" />
-          </Recharts.LineChart>
-        </Recharts.ResponsiveContainer>
-      </div>
-    );
+    const BiodegradableChart = () => {
+      const isMobile = window.innerWidth <= 768;
+      return (
+        <div className="chart-container">
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
+            <Recharts.LineChart data={biodegradableTrend} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+              <Recharts.CartesianGrid strokeDasharray="3 3" />
+              <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
+              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Line type="monotone" dataKey="timbulan" stroke="#10B981" name="Timbulan Sampah" />
+              <Recharts.Line type="monotone" dataKey="biodegradable" stroke="#34D399" name="10% Biodegradable" />
+            </Recharts.LineChart>
+          </Recharts.ResponsiveContainer>
+        </div>
+      );
+    };
 
     const renderCharts = () => {
       ReactDOM.render(<KomposisiChart />, document.getElementById('komposisi-chart'));
@@ -479,42 +506,52 @@
       bubble.style.display = 'flex';
     });
 
-    const responses = {
-      "dampak limbah mikroplastik": "mikroplastik adalah partikel plastik < 5 mm dari degradasi plastik atau produk seperti kosmetik. mikroplastik dapat mencemari air, tanah, hingga makanan. mikroplastik sangat berbahaya, salah satunya berpotensi karsinogenik (DEHA, PCB)",
-      "solusi 3r": "3R adalah pendekatan praktis untuk mengurangi limbah plastik. Reduce mengurangi penggunaan plastik sekali pakai, Reuse mengubah plastik bekas jadi barang berguna, dan Recycle melibatkan daur ulang ke bank sampah.",
-      "inovasi talas": "kemasan biodegradable berbasis lilin daun talas adalah solusi inovatif yang dapat terurai hingga 68,74% dalam 9 hari, tahan air, dan memiliki sifat antimikroba untuk melindungi makanan.",
-      "default": "Maaf, saya belum paham pertanyaanmu. Coba tanyakan tentang dampak limbah mikroplastik, solusi 3R, atau inovasi talas!"
-    };
+    function sendMessage() {
+      const input = document.getElementById("chatbot-input");
+      const body = document.getElementById("chatbot-messages");
+      const question = input.value.toLowerCase().trim();
+      if (!question) return;
 
-    const addMessage = (message, sender) => {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('chatbot-message', sender);
-      messageElement.textContent = message;
-      chatbotMessages.appendChild(messageElement);
-      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    };
+      const userMessage = document.createElement("div");
+      userMessage.className = "chatbot-message user";
+      userMessage.textContent = question;
+      body.appendChild(userMessage);
 
-    chatbotSend.addEventListener('click', () => {
-      const message = chatbotInput.value.trim().toLowerCase();
-      if (message) {
-        addMessage(message, 'user');
-        chatbotInput.value = '';
-        let response = responses["default"];
-        for (let key in responses) {
-          if (message.includes(key)) {
-            response = responses[key];
-            break;
-          }
-        }
-        setTimeout(() => {
-          addMessage(response, 'bot');
-        }, 500);
+      let answer = "Maaf, saya tidak tahu jawabannya.";
+      if (question.includes("mikroplastik")) {
+        answer = "Mikroplastik adalah partikel plastik <5 mm dari degradasi plastik atau produk seperti kosmetik. Cemari tanah, air, fauna, masuk rantai makanan, berpotensi karsinogenik (DEHA, PCB). Distribusi tertinggi: sedimen (32,61%), makanan (30,43%).";
+      } else if (question.includes("limbah") || question.includes("sampah")) {
+        answer = "Indonesia menghasilkan 5,4 juta ton limbah plastik/tahun (peringkat 2 dunia). Global: 100 juta ton/tahun. Nasional (2024): 25,7 juta ton (sisa makanan 39,9%, plastik 18,6%). Penanganan hanya 50-60%.";
+      } else if (question.includes("3r") || question.includes("reduce") || question.includes("reuse") || question.includes("recycle")) {
+        answer = "3R adalah Reduce (bawa wadah sendiri), Reuse (botol jadi pot bunga), Recycle (daur ulang ke bank sampah). Recovery: Jual PET/HDPE untuk nilai ekonomi.";
+      } else if (question.includes("contoh") && question.includes("reuse")) {
+        answer = "Contoh reuse: Potong botol plastik jadi pot bunga, cat, isi tanah. Atau jadikan tempat pensil dari botol bekas.";
+      } else if (question.includes("talas")) {
+        answer = "Kemasan talas biodegradable (68,74% terurai dalam 9 hari), hidrofobik (100% anti-air), antimikroba (flavonoid, saponin). Cocok untuk bungkus nasi.";
+      } else if (question.includes("proses") && question.includes("talas")) {
+        answer = "Proses pembuatan kemasan talas: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, diuji ketahanan (suhu 0–60°C, kelembapan 50–90%).";
+      } else if (question.includes("degradasi")) {
+        answer = "Kemasan talas terurai 18,46% (hari 1) hingga 68,74% (hari 9). Polipropilena konvensional butuh 200 hari.";
+      } else if (question.includes("lignoselulosa")) {
+        answer = "Kandungan lignoselulosa talas: selulosa 40%, hemiselulosa 36%, lignin 24,05%. Dibandingkan: jagung (selulosa 43%, lignin 17,50%), singkong (selulosa 68%, lignin 13,42%).";
+      } else if (question.includes("tren") && question.includes("sampah")) {
+        answer = "Tren timbulan sampah 2018-2024: 54.830 ton (2018) hingga 25,7 juta ton (2024). Penanganan meningkat tapi hanya 50-60%.";
       }
-    });
 
+      input.value = '';
+      setTimeout(() => {
+        const botMessage = document.createElement("div");
+        botMessage.className = "chatbot-message bot";
+        botMessage.textContent = answer;
+        body.appendChild(botMessage);
+        body.scrollTop = body.scrollHeight;
+      }, 500);
+    }
+
+    chatbotSend.addEventListener('click', sendMessage);
     chatbotInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        chatbotSend.click();
+        sendMessage();
       }
     });
 
