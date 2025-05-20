@@ -258,8 +258,7 @@
   <div class="sidebar" id="sidebar">
     <h2>Daftar Isi</h2>
     <ul>
-      <li><a href="#masalah-plastik" onclick="toggleSidebar()">Masalah Plastik</a></li>
-      <li><a href="#solusi-3r" onclick="toggleSidebar()">Solusi 3R</a></li>
+      <li><a href="#latar-belakang" onclick="toggleSidebar()">Latar Belakang</a></li>
       <li><a href="#inovasi-talas" onclick="toggleSidebar()">Inovasi Talas</a></li>
       <li><a href="#kesimpulan" onclick="toggleSidebar()">Kesimpulan</a></li>
     </ul>
@@ -284,7 +283,36 @@
         seperti Amerika Serikat (2,4 gram) dan Paraguay (0,85 gram).
       </p>
 
-      <h3>Penyebab Utama Mikroplastik</h3>
+      <h3>Tren Timbulan Sampah (2018-2024)</h3>
+      <div class="chart-container"><canvas id="tren-chart"></canvas></div>
+
+      <h3>Komposisi Sampah</h3>
+      <div class="chart-container"><canvas id="komposisi-chart"></canvas></div>
+
+      <h3>Sumber Sampah</h3>
+      <div class="chart-container"><canvas id="sumber-chart"></canvas></div>
+
+      <h3>Data Limbah Plastik dan Mikroplastik</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th>Kawasan</th>
+            <th>Jumlah</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Limbah Plastik</td><td>Global</td><td>100 juta ton/tahun</td><td>Meningkat setiap tahun</td></tr>
+          <tr><td>Limbah Plastik</td><td>Indonesia</td><td>5,4 juta ton/tahun</td><td>Peringkat 2 dunia</td></tr>
+          <tr><td>Mikroplastik</td><td>Indonesia</td><td>15 gram konsumsi per-bulan per-orangnya</td><td>Mikroplastik di Indonesia sudah mencemari banyak hal dan banyak tempat, mikroplastik ini berbahaya, memiliki risiko karsinogenik</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Distribusi Mikroplastik</h3>
+      <div class="chart-container"><canvas id="mikroplastik-chart"></canvas></div>
+	  
+      <h3>Sumber Mikroplastik</h3>
       <p>
         Salah satu sumber utama mikroplastik adalah kemasan makanan sekali pakai, khususnya kertas bungkus
         nasi yang dilapisi plastik. Berdasarkan tinjauan literatur dari 13 artikel oleh Aulia et al. (2023),
@@ -313,7 +341,7 @@
         memperparah akumulasi mikroplastik di lingkungan.
       </p>
 
-      <h3>Fokus pada Kertas Bungkus Nasi</h3>
+      <h3>Kertas Bungkus Nasi</h3>
       <p>
         Fokus utama pada kertas bungkus nasi sangat relevan karena lapisan plastik laminasinya tidak hanya
         sulit terdegradasi, tetapi juga mencemari ekosistem tanah dan air. Secara nasional, total timbulan
@@ -326,34 +354,6 @@
         limbah (8,70%), udara (4,35%), dan danau (4,35%), yang semakin memperburuk kerusakan ekosistem.
       </p>
 
-      <h3>Data Limbah Plastik</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Kategori</th>
-            <th>Subkategori</th>
-            <th>Jumlah</th>
-            <th>Keterangan</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Limbah Plastik</td><td>Global</td><td>100 juta ton/tahun</td><td>Meningkat setiap tahun</td></tr>
-          <tr><td>Limbah Plastik</td><td>Indonesia</td><td>5,4 juta ton/tahun</td><td>Peringkat 2 dunia</td></tr>
-          <tr><td>Mikroplastik</td><td>Dampak</td><td>-</td><td>Cemari tanah, air, fauna; risiko karsinogenik</td></tr>
-        </tbody>
-      </table>
-
-      <h3>Komposisi Sampah</h3>
-      <div class="chart-container"><canvas id="komposisi-chart"></canvas></div>
-
-      <h3>Sumber Sampah</h3>
-      <div class="chart-container"><canvas id="sumber-chart"></canvas></div>
-
-      <h3>Tren Timbulan Sampah (2018-2024)</h3>
-      <div class="chart-container"><canvas id="tren-chart"></canvas></div>
-
-      <h3>Distribusi Mikroplastik</h3>
-      <div class="chart-container"><canvas id="mikroplastik-chart"></canvas></div>
     </section>
 
     <section id="solusi-3r" class="section">
@@ -409,22 +409,42 @@
       <p>
         Daun talas dipilih karena memiliki sifat alami yang mendukung keberlanjutan:
       </p>
-      <ul>
-        <li>• Anti air alami: Dilengkapi lapisan lilin mikroskopik (efek lotus) yang efektif menolak air.</li>
-        <li>• Antimikroba alami: Mengandung flavonoid, saponin, dan terpenoid yang mencegah pertumbuhan mikroba, menjaga keselamatan makanan.</li>
-        <li>• Biodegradable: Mudah terurai secara alami tanpa meninggalkan mikroplastik, dengan degradasi yang jauh lebih cepat dibandingkan bahan konvensional.</li>
-        <li>• Akses mudah: Melimpah di alam, terjangkau, dan bersifat berkelanjutan sebagai sumber daya lokal.</li>
-      </ul>
+      <p>
+      <table>
+        <thead>
+          <tr>
+            <th>Keunggulan</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Anti air alami</td><td>Dilengkapi lapisan lilin mikroskopik (efek lotus) yang efektif menolak air.</td></tr>
+          <tr><td>Antimikroba alami</td><td>Mengandung flavonoid, saponin, dan terpenoid yang mencegah pertumbuhan mikroba, menjaga keselamatan makanan.</td></tr>
+          <tr><td>Biodegradable</td><td>Mudah terurai secara alami tanpa meninggalkan mikroplastik, dengan degradasi yang jauh lebih cepat dibandingkan bahan konvensional.</td></tr>
+          <tr><td>Akses mudah</td><td>Melimpah di alam, terjangkau, dan bersifat berkelanjutan sebagai sumber daya lokal.</td></tr>
+        </tbody>
+      </table>
+      </p>
 
       <h3>Kaitan dengan 3R</h3>
       <p>
         Inovasi ini selaras dengan prinsip 3R:
       </p>
-      <ul>
-        <li>• Reduce: Mengurangi ketergantungan pada plastik sekali pakai dalam kehidupan sehari-hari.</li>
-        <li>• Reuse: Memungkinkan penggunaan ulang sebagai pelapis untuk berbagai jenis makanan.</li>
-        <li>• Recycle: Memanfaatkan bahan alami yang dapat diolah kembali melalui proses organik.</li>
-      </ul>
+      <p>
+      <table>
+        <thead>
+          <tr>
+            <th>Prinsip 3R</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Reduce</td><td>Mengurangi ketergantungan pada plastik sekali pakai dalam kehidupan sehari-hari.</td></tr>
+          <tr><td>Reuse</td><td>Memungkinkan penggunaan ulang sebagai pelapis untuk berbagai jenis makanan.</td></tr>
+          <tr><td>Recycle</td><td>Memanfaatkan bahan alami yang dapat diolah kembali melalui proses organik.</td></tr>
+        </tbody>
+      </table>
+      </p>
 
       <h3>Sifat Kemasan Talas</h3>
       <p>
@@ -526,11 +546,21 @@
       <p>
         Inovasi ini menawarkan berbagai keunggulan:
       </p>
-      <ul>
-        <li>• Ramah lingkungan: Mengurangi pencemaran mikroplastik dan mendukung keberlanjutan.</li>
-        <li>• Aman untuk makanan: Dilengkapi sifat antimikroba alami yang menjaga kebersihan dan keselamatan.</li>
-        <li>• Solusi lokal: Memanfaatkan sumber daya daun talas yang mudah diakses, memberikan dampak nyata bagi masyarakat.</li>
-      </ul>
+      <p>
+      <table>
+        <thead>
+          <tr>
+            <th>Manfaat</th>
+            <th>Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Ramah lingkungan</td><td>Mengurangi pencemaran mikroplastik dan mendukung keberlanjutan.</td></tr>
+          <tr><td>Aman untuk makanan</td><td>Dilengkapi sifat antimikroba alami yang menjaga kebersihan dan keselamatan.</td></tr>
+          <tr><td>Solusi lokal</td><td>Memanfaatkan sumber daya daun talas yang mudah diakses, memberikan dampak nyata bagi masyarakat.</td></tr>
+        </tbody>
+      </table>
+      </p>
 
       <h3>Harapan</h3>
       <p>
@@ -864,7 +894,8 @@
         answer = 'Inovasi talas: Lilin daun talas gantikan plastik kertas bungkus nasi. • Anti air (lotus effect), • antimikroba (flavonoid, saponin), • biodegradable (69% dalam 9 hari), • lokal. Dukung 3R.';
       } else if (question.includes('degradasi')) {
         answer = 'Kemasan talas terurai 69% dalam 9 hari: 1 hari (14%), 3 hari (33%), 5 hari (54%), 7 hari (60%), 9 hari (69%). Jauh lebih cepat vs polipropilena (200 hari).';
-      }
+      } else if (question.includes('terima kasih')) {
+		answer = 'Terima kasih kembali.';
 
       const botMessage = document.createElement('div');
       botMessage.className = 'chatbot-message bot';
