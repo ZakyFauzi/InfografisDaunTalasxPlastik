@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eco-Friendly Lifestyle: 3R & Talas Innovations</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.15.0/Recharts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #F5F5DC; margin: 0; padding-top: 60px; }
     nav { position: fixed; top: 0; width: 100%; background-color: #14532D; color: white; z-index: 1000; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; }
@@ -29,7 +25,7 @@
     table th, table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     table th { background-color: #10B981; color: white; }
     .infographic { text-align: center; margin: 20px 0; background-color: #34D399; padding: 15px; border-radius: 8px; color: white; }
-    .chart-container { width: 100%; height: 350px; background-color: #fff; margin: 20px 0 40px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .chart-container { width: 100%; height: 400px; background-color: #fff; margin: 20px 0 40px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
     .chatbot-bubble { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background: #34D399; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 1.5rem; }
     .chatbot { position: fixed; bottom: 20px; right: 20px; background: #34D399; padding: 10px; border-radius: 8px; width: 90%; max-width: 300px; display: none; }
     .chatbot-open { display: block; }
@@ -51,7 +47,7 @@
       .section p { font-size: 0.9rem; }
       table { font-size: 0.85rem; }
       table th, table td { padding: 6px; }
-      .chart-container { height: 300px; margin-bottom: 30px; }
+      .chart-container { height: 350px; margin-bottom: 30px; }
       .chatbot { width: 90%; max-width: 280px; }
     }
 
@@ -61,7 +57,7 @@
       .section p { font-size: 0.85rem; }
       table { font-size: 0.75rem; }
       table th, table td { padding: 4px; }
-      .chart-container { height: 250px; margin-bottom: 20px; }
+      .chart-container { height: 300px; margin-bottom: 20px; }
       .chatbot { width: 90%; max-width: 250px; }
       .chatbot-bubble { width: 40px; height: 40px; font-size: 1.2rem; }
     }
@@ -111,13 +107,13 @@
         </tbody>
       </table>
       <h3>Komposisi Sampah</h3>
-      <div id="komposisi-chart" class="chart-container"></div>
+      <div class="chart-container"><canvas id="komposisi-chart"></canvas></div>
       <h3>Sumber Sampah</h3>
-      <div id="sumber-chart" class="chart-container"></div>
+      <div class="chart-container"><canvas id="sumber-chart"></canvas></div>
       <h3>Tren Timbulan Sampah (2018-2024)</h3>
-      <div id="tren-chart" class="chart-container"></div>
+      <div class="chart-container"><canvas id="tren-chart"></canvas></div>
       <h3>Distribusi Mikroplastik</h3>
-      <div id="mikroplastik-chart" class="chart-container"></div>
+      <div class="chart-container"><canvas id="mikroplastik-chart"></canvas></div>
     </section>
 
     <section id="solusi-3r" class="section">
@@ -195,7 +191,7 @@
           <tr><td>Talas</td><td>40%</td><td>36%</td><td>24,05%</td></tr>
         </tbody>
       </table>
-      <div id="lignoselulosa-chart" class="chart-container"></div>
+      <div class="chart-container"><canvas id="lignoselulosa-chart"></canvas></div>
       <h3>Perbandingan Lama Dekomposisi</h3>
       <table>
         <thead>
@@ -210,9 +206,9 @@
           <tr><td>Kemasan Talas</td><td>9 hari</td><td>Biodegradable</td></tr>
         </tbody>
       </table>
-      <div id="dekomposisi-chart" class="chart-container"></div>
+      <div class="chart-container"><canvas id="dekomposisi-chart"></canvas></div>
       <h3>Perkiraan Timbulan Sampah Jika 10%nya Terbuat dari Bahan Biodegradable</h3>
-      <div id="biodegradable-chart" class="chart-container"></div>
+      <div class="chart-container"><canvas id="biodegradable-chart"></canvas></div>
       <p>Jika 10% dari total timbulan sampah digantikan dengan bahan biodegradable seperti kemasan lilin daun talas yang mudah terurai, maka volume sampah yang menetap di lingkungan dapat berkurang secara signifikan, karena bahan ini akan terdegradasi secara alami dalam waktu yang jauh lebih singkat dibandingkan plastik konvensional.</p>
       <h3>Alur Proses Pembuatan Kemasan Talas</h3>
       <div class="infographic">
@@ -248,9 +244,8 @@
     <button id="chatbot-send">Kirim</button>
   </div>
 
-  <script type="text/babel">
-    const { useEffect, useState } = React;
-
+  <script>
+    // Function to format numbers
     const formatNumber = (num) => {
       if (typeof num !== 'number' || isNaN(num)) return '0';
       if (num >= 1e6) return (num / 1e6).toFixed(1) + ' Juta';
@@ -258,222 +253,207 @@
       return num.toFixed(1);
     };
 
-    const typeData = [
-      { name: 'Sisa Makanan', value: 39.9 },
-      { name: 'Plastik', value: 18.6 },
-      { name: 'Kertas', value: 11.6 },
-      { name: 'Kayu', value: 13.0 },
-      { name: 'Logam', value: 3.2 },
-      { name: 'Kaca', value: 6.9 },
-      { name: 'Lainnya', value: 6.8 }
-    ];
+    // Komposisi Sampah (Pie Chart)
+    const komposisiChart = new Chart(document.getElementById('komposisi-chart'), {
+      type: 'pie',
+      data: {
+        labels: ['Sisa Makanan', 'Plastik', 'Kertas', 'Kayu', 'Logam', 'Kaca', 'Lainnya'],
+        datasets: [{
+          data: [39.9, 18.6, 11.6, 13.0, 3.2, 6.9, 6.8],
+          backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#6B7280', '#9CA3AF', '#D1D5DB'],
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
+        }
+      }
+    });
 
-    const sourceData = [
-      { name: 'Rumah Tangga', value: 1500000 },
-      { name: 'Perkantoran', value: 500000 },
-      { name: 'Pasar', value: 700000 },
-      { name: 'Perniagaan', value: 300000 },
-      { name: 'Fasilitas Umum', value: 200000 },
-      { name: 'Kawasan', value: 400000 },
-      { name: 'Lainnya', value: 600000 }
-    ];
+    // Sumber Sampah (Bar Chart)
+    const sumberChart = new Chart(document.getElementById('sumber-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Rumah Tangga', 'Perkantoran', 'Pasar', 'Perniagaan', 'Fasilitas Umum', 'Kawasan', 'Lainnya'],
+        datasets: [{
+          label: 'Sumber Sampah (ton)',
+          data: [1500000, 500000, 700000, 300000, 200000, 400000, 600000],
+          backgroundColor: '#10B981',
+          barThickness: window.innerWidth <= 768 ? 20 : 30,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${formatNumber(context.raw)} ton` } }
+        },
+        scales: {
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 45 } },
+          y: { ticks: { callback: formatNumber, font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+        }
+      }
+    });
 
-    const timbulanTrend = [
-      { year: 2018, timbulan: 54830, penanganan: 21608 },
-      { year: 2019, timbulan: 27618317, penanganan: 11487192 },
-      { year: 2020, timbulan: 27592603, penanganan: 13278686 },
-      { year: 2021, timbulan: 28591323, penanganan: 13511012 },
-      { year: 2022, timbulan: 38710014, penanganan: 18812922 },
-      { year: 2023, timbulan: 43231282, penanganan: 20199475 },
-      { year: 2024, timbulan: 25723513, penanganan: 11985015 }
-    ];
+    // Tren Timbulan Sampah (Line Chart)
+    const trenChart = new Chart(document.getElementById('tren-chart'), {
+      type: 'line',
+      data: {
+        labels: [2018, 2019, 2020, 2021, 2022, 2023, 2024],
+        datasets: [
+          {
+            label: 'Timbulan Sampah (ton)',
+            data: [54830, 27618317, 27592603, 28591323, 38710014, 43231282, 25723513],
+            borderColor: '#10B981',
+            backgroundColor: '#A7F3D0',
+            fill: true,
+            borderWidth: 2,
+          },
+          {
+            label: 'Penanganan Sampah (ton)',
+            data: [21608, 11487192, 13278686, 13511012, 18812922, 20199475, 11985015],
+            borderColor: '#34D399',
+            backgroundColor: '#6EE7B7',
+            fill: true,
+            borderWidth: 2,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${formatNumber(context.raw)} ton` } }
+        },
+        scales: {
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } },
+          y: { ticks: { callback: formatNumber, font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+        }
+      }
+    });
 
-    const mikroplastikData = [
-      { name: 'Sedimen', value: 32.61 },
-      { name: 'Makanan', value: 30.43 },
-      { name: 'Laut', value: 19.57 },
-      { name: 'Sungai', value: 17.39 },
-      { name: 'Limbah', value: 8.70 },
-      { name: 'Udara', value: 4.35 },
-      { name: 'Danau', value: 4.35 }
-    ];
+    // Distribusi Mikroplastik (Bar Chart)
+    const mikroplastikChart = new Chart(document.getElementById('mikroplastik-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Sedimen', 'Makanan', 'Laut', 'Sungai', 'Limbah', 'Udara', 'Danau'],
+        datasets: [{
+          label: 'Mikroplastik (%)',
+          data: [32.61, 30.43, 19.57, 17.39, 8.70, 4.35, 4.35],
+          backgroundColor: '#10B981',
+          barThickness: window.innerWidth <= 768 ? 20 : 30,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
+        },
+        scales: {
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 45 } },
+          y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+        }
+      }
+    });
 
-    const lignoselulosaData = [
-      { name: 'Jagung-Selulosa', value: 43 },
-      { name: 'Jagung-Hemiselulosa', value: 24 },
-      { name: 'Jagung-Lignin', value: 17.50 },
-      { name: 'Singkong-Selulosa', value: 68 },
-      { name: 'Singkong-Hemiselulosa', value: 21 },
-      { name: 'Singkong-Lignin', value: 13.42 },
-      { name: 'Talas-Selulosa', value: 40 },
-      { name: 'Talas-Hemiselulosa', value: 36 },
-      { name: 'Talas-Lignin', value: 24.05 }
-    ];
+    // Kandungan Lignoselulosa (Bar Chart)
+    const lignoselulosaChart = new Chart(document.getElementById('lignoselulosa-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Jagung-Selulosa', 'Jagung-Hemiselulosa', 'Jagung-Lignin', 'Singkong-Selulosa', 'Singkong-Hemiselulosa', 'Singkong-Lignin', 'Talas-Selulosa', 'Talas-Hemiselulosa', 'Talas-Lignin'],
+        datasets: [{
+          label: 'Kandungan Lignoselulosa (%)',
+          data: [43, 24, 17.50, 68, 21, 13.42, 40, 36, 24.05],
+          backgroundColor: '#34D399',
+          barThickness: window.innerWidth <= 768 ? 20 : 30,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
+        },
+        scales: {
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 45 } },
+          y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+        }
+      }
+    });
 
-    const dekomposisiData = [
-      { name: 'Polipropilena', value: 200 },
-      { name: 'Kemasan Talas', value: 9 }
-    ];
+    // Perbandingan Lama Dekomposisi (Bar Chart)
+    const dekomposisiChart = new Chart(document.getElementById('dekomposisi-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Polipropilena', 'Kemasan Talas'],
+        datasets: [{
+          label: 'Lama Dekomposisi (Hari)',
+          data: [200, 9],
+          backgroundColor: '#10B981',
+          barThickness: window.innerWidth <= 768 ? 20 : 30,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw} Hari` } }
+        },
+        scales: {
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } },
+          y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+        }
+      }
+    });
 
-    const biodegradableTrend = [
-      { year: 2018, timbulan: 54830, biodegradable: 49347.036 },
-      { year: 2019, timbulan: 27618317, biodegradable: 24856485.400 },
-      { year: 2020, timbulan: 27592603, biodegradable: 24833342.900 },
-      { year: 2021, timbulan: 28591323, biodegradable: 25732190.840 },
-      { year: 2022, timbulan: 38710014, biodegradable: 34687128.390 },
-      { year: 2023, timbulan: 43231282, biodegradable: 38572219.260 },
-      { year: 2024, timbulan: 25723513, biodegradable: 23856452.270 }
-    ];
+    // Perkiraan Timbulan Sampah Biodegradable (Line Chart)
+    const biodegradableChart = new Chart(document.getElementById('biodegradable-chart'), {
+      type: 'line',
+      data: {
+        labels: [2018, 2019, 2020, 2021, 2022, 2023, 2024],
+        datasets: [
+          {
+            label: 'Timbulan Sampah (ton)',
+            data: [54830, 27618317, 27592603, 28591323, 38710014, 43231282, 25723513],
+            borderColor: '#10B981',
+            backgroundColor: '#A7F3D0',
+            fill: false,
+            borderWidth: 2,
+          },
+          {
+            label: '10% Biodegradable (ton)',
+            data: [49347.036, 24856485.400, 24833342.900, 25732190.840, 34687128.390, 38572219.260, 23856452.270],
+            borderColor: '#34D399',
+            backgroundColor: '#6EE7B7',
+            fill: false,
+            borderWidth: 2,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${formatNumber(context.raw)} ton` } }
+        },
+        scales: {
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } },
+          y: { ticks: { callback: formatNumber, font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+        }
+      }
+    });
 
-    const KomposisiChart = () => {
-      const isMobile = window.innerWidth <= 768;
-      return (
-        <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
-            <Recharts.PieChart margin={{ top: 20, bottom: isMobile ? 60 : 20 }}>
-              <Recharts.Pie
-                data={typeData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={isMobile ? 80 : 100}
-                label={isMobile ? false : ({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
-              >
-                {typeData.map((entry, index) => (
-                  <Recharts.Cell key={`cell-${index}`} fill={['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#6B7280', '#9CA3AF', '#D1D5DB'][index % 7]} />
-                ))}
-              </Recharts.Pie>
-              <Recharts.Tooltip formatter={(value) => value + '%'} />
-              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
-            </Recharts.PieChart>
-          </Recharts.ResponsiveContainer>
-        </div>
-      );
-    };
-
-    const SumberChart = () => {
-      const isMobile = window.innerWidth <= 768;
-      return (
-        <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
-            <Recharts.BarChart data={sourceData} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 80 : 60 }}>
-              <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={-45} textAnchor="end" height={60} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
-              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
-              <Recharts.Bar dataKey="value" fill="#10B981" name="Sumber Sampah" />
-            </Recharts.BarChart>
-          </Recharts.ResponsiveContainer>
-        </div>
-      );
-    };
-
-    const TrenChart = () => {
-      const isMobile = window.innerWidth <= 768;
-      return (
-        <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
-            <Recharts.AreaChart data={timbulanTrend} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 60 : 40 }}>
-              <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
-              <Recharts.Area type="monotone" dataKey="timbulan" stroke="#10B981" fill="#A7F3D0" name="Timbulan Sampah" />
-              <Recharts.Area type="monotone" dataKey="penanganan" stroke="#34D399" fill="#6EE7B7" name="Penanganan Sampah" />
-            </Recharts.AreaChart>
-          </Recharts.ResponsiveContainer>
-        </div>
-      );
-    };
-
-    const MikroplastikChart = () => {
-      const isMobile = window.innerWidth <= 768;
-      return (
-        <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
-            <Recharts.BarChart data={mikroplastikData} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 80 : 60 }}>
-              <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={-45} textAnchor="end" height={60} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
-              <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.Tooltip formatter={(value) => value + '%'} />
-              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
-              <Recharts.Bar dataKey="value" fill="#10B981" name="Mikroplastik" />
-            </Recharts.BarChart>
-          </Recharts.ResponsiveContainer>
-        </div>
-      );
-    };
-
-    const LignoselulosaChart = () => {
-      const isMobile = window.innerWidth <= 768;
-      return (
-        <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
-            <Recharts.BarChart data={lignoselulosaData} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 100 : 80 }}>
-              <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={-45} textAnchor="end" height={80} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
-              <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.Tooltip formatter={(value) => value + '%'} />
-              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
-              <Recharts.Bar dataKey="value" fill="#34D399" name="Kandungan Lignoselulosa" />
-            </Recharts.BarChart>
-          </Recharts.ResponsiveContainer>
-        </div>
-      );
-    };
-
-    const DekomposisiChart = () => {
-      const isMobile = window.innerWidth <= 768;
-      return (
-        <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
-            <Recharts.BarChart data={dekomposisiData} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 60 : 40 }}>
-              <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.Tooltip formatter={(value) => value + ' Hari'} />
-              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
-              <Recharts.Bar dataKey="value" fill="#10B981" name="Lama Dekomposisi" />
-            </Recharts.BarChart>
-          </Recharts.ResponsiveContainer>
-        </div>
-      );
-    };
-
-    const BiodegradableChart = () => {
-      const isMobile = window.innerWidth <= 768;
-      return (
-        <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
-            <Recharts.LineChart data={biodegradableTrend} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 60 : 40 }}>
-              <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
-              <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
-              <Recharts.Line type="monotone" dataKey="timbulan" stroke="#10B981" name="Timbulan Sampah" />
-              <Recharts.Line type="monotone" dataKey="biodegradable" stroke="#34D399" name="10% Biodegradable" />
-            </Recharts.LineChart>
-          </Recharts.ResponsiveContainer>
-        </div>
-      );
-    };
-
-    const renderCharts = () => {
-      ReactDOM.render(<KomposisiChart />, document.getElementById('komposisi-chart'));
-      ReactDOM.render(<SumberChart />, document.getElementById('sumber-chart'));
-      ReactDOM.render(<TrenChart />, document.getElementById('tren-chart'));
-      ReactDOM.render(<MikroplastikChart />, document.getElementById('mikroplastik-chart'));
-      ReactDOM.render(<LignoselulosaChart />, document.getElementById('lignoselulosa-chart'));
-      ReactDOM.render(<DekomposisiChart />, document.getElementById('dekomposisi-chart'));
-      ReactDOM.render(<BiodegradableChart />, document.getElementById('biodegradable-chart'));
-    };
-
-    renderCharts();
-
+    // Sidebar and Chatbot Logic
     const hamburger = document.getElementById('hamburger');
     const sidebar = document.getElementById('sidebar');
     const chatbotBubble = document.getElementById('chatbot-bubble');
