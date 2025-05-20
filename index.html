@@ -258,7 +258,8 @@
   <div class="sidebar" id="sidebar">
     <h2>Daftar Isi</h2>
     <ul>
-      <li><a href="#latar-belakang" onclick="toggleSidebar()">Latar Belakang</a></li>
+      <li><a href="#masalah-plastik" onclick="toggleSidebar()">Latar Belakang</a></li>
+      <li><a href="#solusi-3r" onclick="toggleSidebar()">Solusi Umum 3R</a></li>
       <li><a href="#inovasi-talas" onclick="toggleSidebar()">Inovasi Talas</a></li>
       <li><a href="#kesimpulan" onclick="toggleSidebar()">Kesimpulan</a></li>
     </ul>
@@ -390,6 +391,9 @@
       <div class="infographic">
         <p><strong>Alur 3R (Konseptual)</strong><br>1. Reduce: Kurangi penggunaan → 2. Reuse: Gunakan kembali → 3. Recycle: Daur ulang.</p>
       </div>
+      <p>
+        Pertanyaanya, apakah solusi sederhana seperti ini dapat menjamin? Tentu saja iya, jika seluruh komponen masyarakat bahu membahu menjaga lingkungan. Hal kecil dapat menjadi besar jika dikerjakan bersama-sama. Maka diperlukan edukasi kepada masyarakat mengenai masalah sampah ini. Kita harus meningkatkan kesadaran masyarakat terkait masalah mikroplastik dan prinsip 3R. Nah, selain itu, kita juga harus terus berinovasi dan mengembangkan prinsip 3R ini untuk setidaknya mengurangi atau menekan pertumbuhan sampah dan mikroplastik.
+      </p>	  
     </section>
 
     <section id="inovasi-talas" class="section">
@@ -881,7 +885,7 @@
       chatbotMessages.appendChild(userMessage);
       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 
-      let answer = 'Maaf, saya tidak tahu jawabannya.';
+      let answer = 'Maaf, hal itu di luar pengetahuan saya.';
       if (question.includes('mikroplastik')) {
         answer = 'Mikroplastik adalah partikel plastik <5 mm dari degradasi plastik atau produk seperti kosmetik. Indonesia konsumsi tertinggi global: 15 gram/bulan (Zhang et al., 2024), vs AS (2,4 gram) dan Paraguay (0,85 gram). Cemari tanah, air, fauna, masuk rantai makanan, berpotensi karsinogenik (DEHA, PCB).';
       } else if (question.includes('limbah') || question.includes('sampah')) {
@@ -894,8 +898,7 @@
         answer = 'Inovasi talas: Lilin daun talas gantikan plastik kertas bungkus nasi. • Anti air (lotus effect), • antimikroba (flavonoid, saponin), • biodegradable (69% dalam 9 hari), • lokal. Dukung 3R.';
       } else if (question.includes('degradasi')) {
         answer = 'Kemasan talas terurai 69% dalam 9 hari: 1 hari (14%), 3 hari (33%), 5 hari (54%), 7 hari (60%), 9 hari (69%). Jauh lebih cepat vs polipropilena (200 hari).';
-      } else if (question.includes('terima kasih')) {
-		answer = 'Terima kasih kembali.';
+      } 
 
       const botMessage = document.createElement('div');
       botMessage.className = 'chatbot-message bot';
