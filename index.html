@@ -199,7 +199,7 @@
             <th>Kategori</th>
             <th>Jumlah</th>
             <th>Keterangan</th>
-          </tr>
+          </ personally>
         </thead>
         <tbody>
           <tr><td>Polipropilena</td><td>200 hari</td><td>Konvensional</td></tr>
@@ -299,7 +299,7 @@
       }
     });
 
-    // Tren Timbulan Sampah (Line Chart)
+    // Tren Timbulan Sampah (Line Chart) - Diperbaiki
     const trenChart = new Chart(document.getElementById('tren-chart'), {
       type: 'line',
       data: {
@@ -309,16 +309,16 @@
             label: 'Timbulan Sampah (ton)',
             data: [54830, 27618317, 27592603, 28591323, 38710014, 43231282, 25723513],
             borderColor: '#10B981',
-            backgroundColor: '#A7F3D0',
-            fill: true,
+            backgroundColor: '#10B981',
+            fill: false, // Tidak mengisi area di bawah garis
             borderWidth: 2,
           },
           {
             label: 'Penanganan Sampah (ton)',
             data: [21608, 11487192, 13278686, 13511012, 18812922, 20199475, 11985015],
             borderColor: '#34D399',
-            backgroundColor: '#6EE7B7',
-            fill: true,
+            backgroundColor: '#34D399',
+            fill: false, // Tidak mengisi area di bawah garis
             borderWidth: 2,
           }
         ]
