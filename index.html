@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -63,12 +24,12 @@
     .section { margin-bottom: 40px; }
     .section h2 { font-size: 1.75rem; font-weight: bold; color: #14532D; margin-bottom: 1rem; }
     .section h3 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; }
-    .section p { font-size: 1rem; color: #4B5563; line-height: 1.6; }
+    .section p { font-size: 1rem; color: #4B5563; line-height: 1.6; text-align: justify; }
     table { width: 100%; border-collapse: collapse; margin: 20px 0; }
     table th, table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     table th { background-color: #10B981; color: white; }
     .infographic { text-align: center; margin: 20px 0; background-color: #34D399; padding: 15px; border-radius: 8px; color: white; }
-    .chart-container { width: 100%; height: 300px; background-color: #fff; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .chart-container { width: 100%; height: 350px; background-color: #fff; margin: 20px 0 40px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .chatbot-bubble { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background: #34D399; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 1.5rem; }
     .chatbot { position: fixed; bottom: 20px; right: 20px; background: #34D399; padding: 10px; border-radius: 8px; width: 90%; max-width: 300px; display: none; }
     .chatbot-open { display: block; }
@@ -90,7 +51,7 @@
       .section p { font-size: 0.9rem; }
       table { font-size: 0.85rem; }
       table th, table td { padding: 6px; }
-      .chart-container { height: 250px; }
+      .chart-container { height: 300px; margin-bottom: 30px; }
       .chatbot { width: 90%; max-width: 280px; }
     }
 
@@ -100,7 +61,7 @@
       .section p { font-size: 0.85rem; }
       table { font-size: 0.75rem; }
       table th, table td { padding: 4px; }
-      .chart-container { height: 200px; }
+      .chart-container { height: 250px; margin-bottom: 20px; }
       .chatbot { width: 90%; max-width: 250px; }
       .chatbot-bubble { width: 40px; height: 40px; font-size: 1.2rem; }
     }
@@ -368,8 +329,8 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
-            <Recharts.PieChart>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
+            <Recharts.PieChart margin={{ top: 20, bottom: isMobile ? 60 : 20 }}>
               <Recharts.Pie
                 data={typeData}
                 dataKey="value"
@@ -384,7 +345,7 @@
                 ))}
               </Recharts.Pie>
               <Recharts.Tooltip formatter={(value) => value + '%'} />
-              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
             </Recharts.PieChart>
           </Recharts.ResponsiveContainer>
         </div>
@@ -395,13 +356,13 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
-            <Recharts.BarChart data={sourceData} margin={{ top: 20, right: 10, left: 0, bottom: 40 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
+            <Recharts.BarChart data={sourceData} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 80 : 60 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={isMobile ? -45 : -45} textAnchor="end" height={60} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
+              <Recharts.XAxis dataKey="name" angle={-45} textAnchor="end" height={60} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
               <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
               <Recharts.Bar dataKey="value" fill="#10B981" name="Sumber Sampah" />
             </Recharts.BarChart>
           </Recharts.ResponsiveContainer>
@@ -413,13 +374,13 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
-            <Recharts.AreaChart data={timbulanTrend} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
+            <Recharts.AreaChart data={timbulanTrend} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 60 : 40 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
               <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
               <Recharts.Area type="monotone" dataKey="timbulan" stroke="#10B981" fill="#A7F3D0" name="Timbulan Sampah" />
               <Recharts.Area type="monotone" dataKey="penanganan" stroke="#34D399" fill="#6EE7B7" name="Penanganan Sampah" />
             </Recharts.AreaChart>
@@ -432,13 +393,13 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
-            <Recharts.BarChart data={mikroplastikData} margin={{ top: 20, right: 10, left: 0, bottom: 40 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
+            <Recharts.BarChart data={mikroplastikData} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 80 : 60 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={isMobile ? -45 : -45} textAnchor="end" height={60} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
+              <Recharts.XAxis dataKey="name" angle={-45} textAnchor="end" height={60} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
               <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => value + '%'} />
-              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
               <Recharts.Bar dataKey="value" fill="#10B981" name="Mikroplastik" />
             </Recharts.BarChart>
           </Recharts.ResponsiveContainer>
@@ -450,13 +411,13 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
-            <Recharts.BarChart data={lignoselulosaData} margin={{ top: 20, right: 10, left: 0, bottom: 60 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
+            <Recharts.BarChart data={lignoselulosaData} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 100 : 80 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={isMobile ? -45 : -45} textAnchor="end" height={80} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
+              <Recharts.XAxis dataKey="name" angle={-45} textAnchor="end" height={80} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
               <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => value + '%'} />
-              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
               <Recharts.Bar dataKey="value" fill="#34D399" name="Kandungan Lignoselulosa" />
             </Recharts.BarChart>
           </Recharts.ResponsiveContainer>
@@ -468,13 +429,13 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
-            <Recharts.BarChart data={dekomposisiData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
+            <Recharts.BarChart data={dekomposisiData} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 60 : 40 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
               <Recharts.XAxis dataKey="name" style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => value + ' Hari'} />
-              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
               <Recharts.Bar dataKey="value" fill="#10B981" name="Lama Dekomposisi" />
             </Recharts.BarChart>
           </Recharts.ResponsiveContainer>
@@ -486,15 +447,15 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
-            <Recharts.LineChart data={biodegradableTrend} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 350}>
+            <Recharts.LineChart data={biodegradableTrend} margin={{ top: 20, right: 10, left: 0, bottom: isMobile ? 60 : 40 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
               <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
-              <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
+              <Recharts.Legend layout="horizontal" align="center" verticalAlign="bottom" wrapperStyle={{ fontSize: isMobile ? 10 : 12, paddingTop: 10 }} />
               <Recharts.Line type="monotone" dataKey="timbulan" stroke="#10B981" name="Timbulan Sampah" />
-              <Recharts.Line type="monotone" dataKey="biodegradable" stroke="# hydrochlorb399" name="10% Biodegradable" />
+              <Recharts.Line type="monotone" dataKey="biodegradable" stroke="#34D399" name="10% Biodegradable" />
             </Recharts.LineChart>
           </Recharts.ResponsiveContainer>
         </div>
