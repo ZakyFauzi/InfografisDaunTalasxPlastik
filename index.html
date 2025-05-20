@@ -1,4 +1,43 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -9,58 +48,70 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-  <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chrono-node/1.3.11/chrono.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.15.0/Recharts.min.js"></script>
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #F5F5DC; margin: 0; padding-top: 70px; }
-    .section { padding: 40px 20px; }
-    .chart-container { padding: 15px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; width: 100%; overflow-x: auto; }
-    .infographic { display: flex; justify-content: center; margin: 20px 0; }
-    .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-    .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    .table th { background-color: #10B981; color: white; }
-    nav { position: fixed; top: 0; width: 100%; background-color: #14532D; color: white; z-index: 1000; height: 60px; }
-    .hamburger { position: fixed; top: 15px; left: 15px; background: none; border: none; font-size: 24px; color: white; cursor: pointer; z-index: 1001; display: none; }
-    .sidebar { width: 250px; background-color: #388e3c; color: white; position: fixed; top: 0; left: 0; height: 100vh; padding: 20px; overflow-y: auto; transition: transform 0.3s ease; transform: translateX(0); z-index: 999; }
-    .sidebar.open { transform: translateX(0); }
+    body { font-family: 'Inter', sans-serif; background-color: #F5F5DC; margin: 0; padding-top: 60px; }
+    nav { position: fixed; top: 0; width: 100%; background-color: #14532D; color: white; z-index: 1000; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; }
+    .hamburger { display: none; font-size: 24px; background: none; border: none; color: white; cursor: pointer; }
+    .sidebar { width: 250px; background-color: #388e3c; color: white; position: fixed; top: 0; left: 0; height: 100vh; padding: 20px; overflow-y: auto; z-index: 999; }
     .sidebar h2 { color: white; text-align: center; margin-bottom: 20px; }
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li { margin: 15px 0; }
     .sidebar ul li a { color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; transition: all 0.3s; }
     .sidebar ul li a:hover { background-color: #ffeb3b; color: #388e3c; transform: scale(1.05); }
-    main { margin-left: 250px; transition: margin-left 0.3s ease; }
-    .chatbot-bubble { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #34D399; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-    .chatbot { position: fixed; bottom: 20px; right: 20px; background: #34D399; padding: 10px; border-radius: 8px; width: 300px; display: none; }
+    main { margin-left: 250px; padding: 20px; transition: margin-left 0.3s ease; }
+    .section { margin-bottom: 40px; }
+    .section h2 { font-size: 1.75rem; font-weight: bold; color: #14532D; margin-bottom: 1rem; }
+    .section h3 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; }
+    .section p { font-size: 1rem; color: #4B5563; line-height: 1.6; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    table th, table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    table th { background-color: #10B981; color: white; }
+    .infographic { text-align: center; margin: 20px 0; background-color: #34D399; padding: 15px; border-radius: 8px; color: white; }
+    .chart-container { width: 100%; height: 300px; background-color: #fff; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .chatbot-bubble { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background: #34D399; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 1.5rem; }
+    .chatbot { position: fixed; bottom: 20px; right: 20px; background: #34D399; padding: 10px; border-radius: 8px; width: 90%; max-width: 300px; display: none; }
     .chatbot-open { display: block; }
     .chatbot-messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; padding: 10px; background: #fff; border-radius: 5px; }
     .chatbot-message { margin: 5px 0; }
     .chatbot-message.user { text-align: right; color: #14532D; }
     .chatbot-message.bot { text-align: left; color: #000; }
-    @media (max-width: 768px) { 
+    input[type="text"] { width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #D1D5DB; }
+    button { padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; }
+    button#chatbot-send { background-color: #10B981; color: white; width: 100%; }
+
+    @media (max-width: 768px) {
       .hamburger { display: block; }
-      .sidebar { width: 200px; transform: translateX(-100%); }
+      .sidebar { width: 200px; transform: translateX(-100%); transition: transform 0.3s ease; }
       .sidebar.open { transform: translateX(0); }
       main { margin-left: 0; }
-      .chart-container { height: 300px; min-width: 600px; }
-      header h1 { font-size: 1.5rem; }
-      .section { padding: 20px 10px; }
-      .table { font-size: 0.9em; }
+      .section h2 { font-size: 1.5rem; }
+      .section h3 { font-size: 1.1rem; }
+      .section p { font-size: 0.9rem; }
+      table { font-size: 0.85rem; }
+      table th, table td { padding: 6px; }
+      .chart-container { height: 250px; }
+      .chatbot { width: 90%; max-width: 280px; }
     }
-    @media (max-width: 480px) { 
-      .chart-container { height: 250px; min-width: 500px; }
-      .table { font-size: 0.8em; }
+
+    @media (max-width: 480px) {
+      .section h2 { font-size: 1.25rem; }
+      .section h3 { font-size: 1rem; }
+      .section p { font-size: 0.85rem; }
+      table { font-size: 0.75rem; }
+      table th, table td { padding: 4px; }
+      .chart-container { height: 200px; }
+      .chatbot { width: 90%; max-width: 250px; }
+      .chatbot-bubble { width: 40px; height: 40px; font-size: 1.2rem; }
     }
   </style>
 </head>
 <body>
-  <nav class="bg-green-800 text-white p-4 flex justify-between items-center">
-    <div class="text-xl font-bold"></div>
-    <div class="text-xl font-bold">Eco-Friendly Lifestyle</div>
-    <div></div>
+  <nav>
+    <button class="hamburger" id="hamburger">☰</button>
+    <span>Eco-Friendly Lifestyle</span>
+    <span></span>
   </nav>
-
-  <button class="hamburger" onclick="toggleSidebar()">☰</button>
 
   <div class="sidebar" id="sidebar">
     <h2>Daftar Isi</h2>
@@ -72,22 +123,18 @@
     </ul>
   </div>
 
-  <main class="flex-1 p-4">
+  <main>
     <header class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-green-800">Eco-Friendly Lifestyle: 3R & Talas Innovations</h1>
+      <h1>Eco-Friendly Lifestyle: 3R & Talas Innovations</h1>
     </header>
 
     <section id="masalah-plastik" class="section">
-      <h2 class="text-2xl font-bold mb-4 text-green-700">Masalah: Limbah Plastik dan Mikroplastik</h2>
-      <h3 class="text-xl font-semibold mb-2">Latar Belakang</h3>
-      <p class="text-gray-700 mb-4">
-        Sampah plastik adalah krisis global. Indonesia menyumbang 5,4 juta ton limbah plastik per tahun, menjadikannya penyumbang terbesar kedua dunia. Secara global, 100 juta ton plastik diproduksi setiap tahun, menyumbang emisi karbon tinggi dari ekstraksi minyak bumi hingga pembakaran sampah (menghasilkan CO, HCN). Mikroplastik (partikel <5 mm) mencemari tanah, air, dan fauna, serta memiliki risiko karsinogenik bagi manusia.
-      </p>
-      <p class="text-gray-700 mb-4">
-        Berdasarkan data nasional, total timbulan sampah di Indonesia pada 2024 mencapai 25,7 juta ton, dengan komposisi didominasi oleh sisa makanan (39,9%), plastik (18,6%), kertas (11,6%), kayu (13%), logam (3,2%), kaca (6,9%), dan lainnya (6,8%). Sumber utama sampah meliputi rumah tangga (terbanyak), perkantoran, pasar, perniagaan, fasilitas umum, kawasan, dan lainnya. Tren timbulan sampah dari 2018 hingga 2024 menunjukkan peningkatan signifikan, dengan penanganan yang hanya mencapai sekitar 50-60% dari total timbulan. Distribusi mikroplastik terdeteksi paling tinggi di sedimen (32,61%), diikuti makanan (30,43%), laut (19,57%), sungai (17,39%), limbah (8,70%), udara (4,35%), dan danau (4,35%), memperparah pencemaran lingkungan.
-      </p>
-      <h3 class="text-xl font-semibold mb-2">Data Limbah Plastik</h3>
-      <table class="table">
+      <h2>Masalah: Limbah Plastik dan Mikroplastik</h2>
+      <h3>Latar Belakang</h3>
+      <p>Sampah plastik adalah krisis global. Indonesia menyumbang 5,4 juta ton limbah plastik per tahun, menjadikannya penyumbang terbesar kedua dunia. Secara global, 100 juta ton plastik diproduksi setiap tahun, menyumbang emisi karbon tinggi dari ekstraksi minyak bumi hingga pembakaran sampah (menghasilkan CO, HCN). Mikroplastik (partikel <5 mm) mencemari tanah, air, dan fauna, serta memiliki risiko karsinogenik bagi manusia.</p>
+      <p>Berdasarkan data nasional, total timbulan sampah di Indonesia pada 2024 mencapai 25,7 juta ton, dengan komposisi didominasi oleh sisa makanan (39,9%), plastik (18,6%), kertas (11,6%), kayu (13%), logam (3,2%), kaca (6,9%), dan lainnya (6,8%). Sumber utama sampah meliputi rumah tangga (terbanyak), perkantoran, pasar, perniagaan, fasilitas umum, kawasan, dan lainnya. Tren timbulan sampah dari 2018 hingga 2024 menunjukkan peningkatan signifikan, dengan penanganan yang hanya mencapai sekitar 50-60% dari total timbulan. Distribusi mikroplastik terdeteksi paling tinggi di sedimen (32,61%), diikuti makanan (30,43%), laut (19,57%), sungai (17,39%), limbah (8,70%), udara (4,35%), dan danau (4,35%), memperparah pencemaran lingkungan.</p>
+      <h3>Data Limbah Plastik</h3>
+      <table>
         <thead>
           <tr>
             <th>Kategori</th>
@@ -102,24 +149,22 @@
           <tr><td>Mikroplastik</td><td>Dampak</td><td>-</td><td>Cemari tanah, air, fauna; risiko karsinogenik</td></tr>
         </tbody>
       </table>
-      <h3 class="text-xl font-semibold mb-2">Komposisi Sampah</h3>
+      <h3>Komposisi Sampah</h3>
       <div id="komposisi-chart" class="chart-container"></div>
-      <h3 class="text-xl font-semibold mb-2">Sumber Sampah</h3>
+      <h3>Sumber Sampah</h3>
       <div id="sumber-chart" class="chart-container"></div>
-      <h3 class="text-xl font-semibold mb-2">Tren Timbulan Sampah (2018-2024)</h3>
+      <h3>Tren Timbulan Sampah (2018-2024)</h3>
       <div id="tren-chart" class="chart-container"></div>
-      <h3 class="text-xl font-semibold mb-2">Distribusi Mikroplastik</h3>
+      <h3>Distribusi Mikroplastik</h3>
       <div id="mikroplastik-chart" class="chart-container"></div>
     </section>
 
     <section id="solusi-3r" class="section">
-      <h2 class="text-2xl font-bold mb-4 text-green-700">Solusi Umum: Reduce, Reuse, Recycle (3R)</h2>
-      <h3 class="text-xl font-semibold mb-2">Penjelasan</h3>
-      <p class="text-gray-700 mb-4">
-        3R adalah pendekatan praktis untuk mengurangi limbah plastik. Reduce berfokus pada mengurangi penggunaan plastik sekali pakai, seperti membawa wadah atau tas belanja sendiri. Reuse mengubah plastik bekas menjadi barang berguna, misalnya botol plastik jadi pot bunga atau tempat pensil (DIY: potong botol, cat, isi tanah). Recycle melibatkan daur ulang plastik ke bank sampah untuk jadi kresek atau pot hitam. Penerapan 3R mendukung gaya hidup eco-friendly dan mengurangi dampak lingkungan.
-      </p>
-      <h3 class="text-xl font-semibold mb-2">Data Pendekatan 3R</h3>
-      <table class="table">
+      <h2>Solusi Umum: Reduce, Reuse, Recycle (3R)</h2>
+      <h3>Penjelasan</h3>
+      <p>3R adalah pendekatan praktis untuk mengurangi limbah plastik. Reduce berfokus pada mengurangi penggunaan plastik sekali pakai, seperti membawa wadah atau tas belanja sendiri. Reuse mengubah plastik bekas menjadi barang berguna, misalnya botol plastik jadi pot bunga atau tempat pensil (DIY: potong botol, cat, isi tanah). Recycle melibatkan daur ulang plastik ke bank sampah untuk jadi kresek atau pot hitam. Penerapan 3R mendukung gaya hidup eco-friendly dan mengurangi dampak lingkungan.</p>
+      <h3>Data Pendekatan 3R</h3>
+      <table>
         <thead>
           <tr>
             <th>Kategori</th>
@@ -133,23 +178,18 @@
           <tr><td>Recycle</td><td>Serahkan ke bank sampah</td><td>Jadi kresek/pot hitam</td></tr>
         </tbody>
       </table>
-      <h3 class="text-xl font-semibold mb-2">Alur 3R</h3>
+      <h3>Alur 3R</h3>
       <div class="infographic">
-        <p class="text-center bg-green-100 p-4 rounded-lg">
-          <strong>Alur 3R (Konseptual)</strong><br/>
-          1. Reduce: Kurangi penggunaan → 2. Reuse: Gunakan kembali → 3. Recycle: Daur ulang.
-        </p>
+        <p><strong>Alur 3R (Konseptual)</strong><br>1. Reduce: Kurangi penggunaan → 2. Reuse: Gunakan kembali → 3. Recycle: Daur ulang.</p>
       </div>
     </section>
 
     <section id="inovasi-talas" class="section">
-      <h2 class="text-2xl font-bold mb-4 text-green-700">Inovasi: Biodegradable Food Packaging Berbasis Lilin Daun Talas</h2>
-      <h3 class="text-xl font-semibold mb-2">Penjelasan</h3>
-      <p class="text-gray-700 mb-4">
-        Kemasan biodegradable berbasis lilin daun talas adalah solusi inovatif untuk mengatasi pencemaran limbah plastik, terutama kertas bungkus nasi berlaminasi plastik. Prosedur Pembuatan: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, lalu diuji ketahanan (suhu 0–60°C, kelembapan 50–90%). Kemasan ini tahan suhu dan kelembapan, cocok untuk makanan seperti nasi.
-      </p>
-      <h3 class="text-xl font-semibold mb-2">Sifat Kemasan Talas</h3>
-      <table class="table">
+      <h2>Inovasi: Biodegradable Food Packaging Berbasis Lilin Daun Talas</h2>
+      <h3>Penjelasan</h3>
+      <p>Kemasan biodegradable berbasis lilin daun talas adalah solusi inovatif untuk mengatasi pencemaran limbah plastik, terutama kertas bungkus nasi berlaminasi plastik. Prosedur Pembuatan: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, lalu diuji ketahanan (suhu 0–60°C, kelembapan 50–90%). Kemasan ini tahan suhu dan kelembapan, cocok untuk makanan seperti nasi.</p>
+      <h3>Sifat Kemasan Talas</h3>
+      <table>
         <thead>
           <tr>
             <th>Kategori</th>
@@ -163,8 +203,8 @@
           <tr><td>Antimikroba</td><td>Flavonoid, saponin</td><td>Melindungi makanan</td></tr>
         </tbody>
       </table>
-      <h3 class="text-xl font-semibold mb-2">Tingkat Degradasi Kemasan Talas</h3>
-      <table class="table">
+      <h3>Tingkat Degradasi Kemasan Talas</h3>
+      <table>
         <thead>
           <tr>
             <th>Kategori</th>
@@ -178,8 +218,8 @@
           <tr><td>Degradasi</td><td>Hari 9</td><td>68,74%</td><td>Terurai signifikan</td></tr>
         </tbody>
       </table>
-      <h3 class="text-xl font-semibold mb-2">Kandungan Lignoselulosa</h3>
-      <table class="table">
+      <h3>Kandungan Lignoselulosa</h3>
+      <table>
         <thead>
           <tr>
             <th>Bahan</th>
@@ -195,8 +235,8 @@
         </tbody>
       </table>
       <div id="lignoselulosa-chart" class="chart-container"></div>
-      <h3 class="text-xl font-semibold mb-2">Perbandingan Lama Dekomposisi</h3>
-      <table class="table">
+      <h3>Perbandingan Lama Dekomposisi</h3>
+      <table>
         <thead>
           <tr>
             <th>Kategori</th>
@@ -210,61 +250,41 @@
         </tbody>
       </table>
       <div id="dekomposisi-chart" class="chart-container"></div>
-      <h3 class="text-xl font-semibold mb-2">Perkiraan Timbulan Sampah Jika 10%nya Terbuat dari bahan Biodegradable</h3>
+      <h3>Perkiraan Timbulan Sampah Jika 10%nya Terbuat dari Bahan Biodegradable</h3>
       <div id="biodegradable-chart" class="chart-container"></div>
-      <p class="text-gray-700 mb-4">
-        Jika 10% dari total timbulan sampah digantikan dengan bahan biodegradable seperti kemasan lilin daun talas yang mudah terurai, maka volume sampah yang menetap di lingkungan dapat berkurang secara signifikan, karena bahan ini akan terdegradasi secara alami dalam waktu yang jauh lebih singkat dibandingkan plastik konvensional.
-      </p>
-      <h3 class="text-xl font-semibold mb-2">Alur Proses Pembuatan Kemasan Talas</h3>
+      <p>Jika 10% dari total timbulan sampah digantikan dengan bahan biodegradable seperti kemasan lilin daun talas yang mudah terurai, maka volume sampah yang menetap di lingkungan dapat berkurang secara signifikan, karena bahan ini akan terdegradasi secara alami dalam waktu yang jauh lebih singkat dibandingkan plastik konvensional.</p>
+      <h3>Alur Proses Pembuatan Kemasan Talas</h3>
       <div class="infographic">
-        <p class="text-center bg-green-100 p-4 rounded-lg">
-          <strong>Proses Pembuatan Kemasan Talas</strong><br/>
-          1. Ekstraksi lilin daun talas → 2. Pelapisan kertas cokelat → 3. Pengujian (suhu, kelembapan, biodegradabilitas) → 4. Produksi kemasan.
-        </p>
+        <p><strong>Proses Pembuatan Kemasan Talas</strong><br>1. Ekstraksi lilin daun talas → 2. Pelapisan kertas cokelat → 3. Pengujian (suhu, kelembapan, biodegradabilitas) → 4. Produksi kemasan.</p>
       </div>
-      <h3 class="text-xl font-semibold mb-2">Hipotesis</h3>
-      <p class="text-gray-700 mb-4">
-        Penggunaan kemasan biodegradable berbahan lilin daun talas dapat menjadi solusi nyata untuk mengurangi limbah plastik dari rumah tangga yang berkontribusi besar terhadap pencemaran mikroplastik. Dengan tingkat penguraian mencapai 68,74% dalam 9 hari, kemasan lilin daun talas berpotensi mengurangi timbunan sampah plastik yang selama ini mencemari tanah, air, dan makanan. Karena bersifat anti-air dan antimikroba, kemasan dari daun talas tidak hanya ramah lingkungan tetapi juga aman untuk membungkus makanan, sehingga bisa menggantikan plastik konvensional. Inovasi kemasan ini mendukung gaya hidup ramah lingkungan berbasis prinsip 3R (Reduce, Reuse, Recycle), dengan cara mengurangi penggunaan plastik dan mencegah terbentuknya mikroplastik yang berbahaya bagi manusia dan ekosistem. Jika masyarakat mulai beralih menggunakan kemasan dari lilin daun talas, maka potensi sampah plastik yang tidak terkelola dapat ditekan, sekaligus menjaga ekosistem perairan dari ancaman mikroplastik.
-      </p>
-      <h3 class="text-xl font-semibold mb-2">Harapan</h3>
-      <p class="text-gray-700 mb-4">
-        Diharapkan, inovasi kemasan biodegradable berbahan lilin daun talas ini dapat menjadi langkah konkret dalam mengatasi permasalahan sampah plastik dan mikroplastik yang semakin mengancam lingkungan dan kesehatan manusia. Dengan kemampuan terurai yang tinggi, sifat anti-air, dan antimikroba, kemasan ini tidak hanya ramah lingkungan, tetapi juga aman untuk makanan. Melalui penerapan inovasi ini secara luas, terutama di sektor rumah tangga dan industri makanan, diharapkan timbulan sampah plastik dapat ditekan secara signifikan, sehingga pencemaran mikroplastik di tanah, air, dan rantai makanan dapat diminimalkan. Inovasi ini menjadi bagian penting dari gerakan menuju gaya hidup berkelanjutan berbasis prinsip 3R, sekaligus menjadi solusi masa depan untuk bumi yang lebih bersih dan sehat.
-      </p>
-
+      <h3>Hipotesis</h3>
+      <p>Penggunaan kemasan biodegradable berbahan lilin daun talas dapat menjadi solusi nyata untuk mengurangi limbah plastik dari rumah tangga yang berkontribusi besar terhadap pencemaran mikroplastik. Dengan tingkat penguraian mencapai 68,74% dalam 9 hari, kemasan lilin daun talas berpotensi mengurangi timbunan sampah plastik yang selama ini mencemari tanah, air, dan makanan. Karena bersifat anti-air dan antimikroba, kemasan dari daun talas tidak hanya ramah lingkungan tetapi juga aman untuk membungkus makanan, sehingga bisa menggantikan plastik konvensional. Inovasi kemasan ini mendukung gaya hidup ramah lingkungan berbasis prinsip 3R (Reduce, Reuse, Recycle), dengan cara mengurangi penggunaan plastik dan mencegah terbentuknya mikroplastik yang berbahaya bagi manusia dan ekosistem. Jika masyarakat mulai beralih menggunakan kemasan dari lilin daun talas, maka potensi sampah plastik yang tidak terkelola dapat ditekan, sekaligus menjaga ekosistem perairan dari ancaman mikroplastik.</p>
+      <h3>Harapan</h3>
+      <p>Diharapkan, inovasi kemasan biodegradable berbahan lilin daun talas ini dapat menjadi langkah konkret dalam mengatasi permasalahan sampah plastik dan mikroplastik yang semakin mengancam lingkungan dan kesehatan manusia. Dengan kemampuan terurai yang tinggi, sifat anti-air, dan antimikroba, kemasan ini tidak hanya ramah lingkungan, tetapi juga aman untuk makanan. Melalui penerapan inovasi ini secara luas, terutama di sektor rumah tangga dan industri makanan, diharapkan timbulan sampah plastik dapat ditekan secara signifikan, sehingga pencemaran mikroplastik di tanah, air, dan rantai makanan dapat diminimalkan. Inovasi ini menjadi bagian penting dari gerakan menuju gaya hidup berkelanjutan berbasis prinsip 3R, sekaligus menjadi solusi masa depan untuk bumi yang lebih bersih dan sehat.</p>
     </section>
 
     <section id="kesimpulan" class="section">
-      <h2 class="text-2xl font-bold mb-4 text-green-700">Kesimpulan</h2>
-      <h3 class="text-xl font-semibold mb-2">Ringkasan Masalah: Limbah Plastik dan Mikroplastik</h3>
-      <p class="text-gray-700 mb-4">
-        Limbah plastik merupakan ancaman serius bagi lingkungan dan kesehatan manusia. Indonesia menyumbang sekitar 5,4 juta ton limbah plastik per tahun, menjadikannya penyumbang limbah plastik terbesar kedua di dunia. Salah satu akibatnya adalah terbentuknya mikroplastik — fragmen kecil dari plastik yang mencemari tanah, air, dan rantai makanan. Mikroplastik paling banyak ditemukan di sedimen (32,61%) dan makanan (30,43%), serta memiliki risiko karsinogenik yang membahayakan manusia.
-      </p>
-      <h3 class="text-xl font-semibold mb-2">Solusi Umum: Pendekatan 3R</h3>
-      <p class="text-gray-700 mb-4">
-        Pendekatan Reduce, Reuse, Recycle (3R) merupakan langkah praktis untuk menanggulangi permasalahan sampah plastik. Ada banyak pendekatan 3R yang bisa kita lakukan. Reduce dapat dilakukan dengan membawa wadah makan sendiri atau membeli produk dengan kemasan ramah lingkungan. Reuse dilakukan dengan memanfaatkan kembali barang bekas seperti botol plastik menjadi pot bunga. Sementara itu, Recycle dilakukan dengan mengumpulkan sampah plastik ke bank sampah agar bisa diolah kembali menjadi produk seperti kresek atau pot tanaman. Pendekatan 3R ini dapat menjadi gaya hidup berkelanjutan jika diterapkan secara konsisten oleh masyarakat.
-      </p>
-      <h3 class="text-xl font-semibold mb-2">Inovasi: Kemasan Lilin Daun Talas</h3>
-      <p class="text-gray-700 mb-4">
-        Sebagai bentuk implementasi prinsip 3R, inovasi kemasan biodegradable berbahan lilin daun talas hadir sebagai solusi alternatif pengganti plastik sekali pakai. Inovasi ini memiliki keunggulan seperti kemampuan terurai hingga 68,74% dalam waktu 9 hari, sifat hidrofobik (100% tahan air), serta kemampuan antimikroba yang menjadikannya aman untuk membungkus makanan. Dengan memanfaatkan daun talas yang kaya lignoselulosa dan mudah terdegradasi, inovasi ini diharapkan mampu mengurangi timbulan sampah rumah tangga berbasis plastik dan menekan pencemaran mikroplastik di lingkungan, khususnya di perairan dan rantai makanan. Diharapkan, kemasan lilin daun talas dapat diadopsi secara luas oleh masyarakat dan industri sebagai alternatif kemasan yang ramah lingkungan. Inovasi ini membawa harapan besar dalam menanggulangi akumulasi sampah plastik dan mikroplastik, sekaligus mendorong perubahan perilaku konsumsi menuju yang lebih berkelanjutan. Jika kemasan biodegradable ini digunakan secara masif, maka potensi pencemaran mikroplastik akan semakin ditekan dan dampaknya terhadap lingkungan serta kesehatan manusia dapat diminimalkan.
-      </p>
-      <h3 class="text-xl font-semibold mb-2">Eco-Friendly Lifestyle</h3>
-      <p class="text-gray-700 mb-4">
-        Perubahan besar dimulai dari langkah kecil. Kurangi penggunaan plastik sekali pakai, dukung produk-produk biodegradable seperti kemasan daun talas, dan aktif dalam kegiatan daur ulang. Dengan menerapkan gaya hidup eco-friendly berbasis 3R, kita turut menjaga kelestarian lingkungan dan menciptakan masa depan yang lebih sehat dan bersih bagi generasi mendatang.
-      </p>
+      <h2>Kesimpulan</h2>
+      <h3>Ringkasan Masalah: Limbah Plastik dan Mikroplastik</h3>
+      <p>Limbah plastik merupakan ancaman serius bagi lingkungan dan kesehatan manusia. Indonesia menyumbang sekitar 5,4 juta ton limbah plastik per tahun, menjadikannya penyumbang limbah plastik terbesar kedua di dunia. Salah satu akibatnya adalah terbentuknya mikroplastik — fragmen kecil dari plastik yang mencemari tanah, air, dan rantai makanan. Mikroplastik paling banyak ditemukan di sedimen (32,61%) dan makanan (30,43%), serta memiliki risiko karsinogenik yang membahayakan manusia.</p>
+      <h3>Solusi Umum: Pendekatan 3R</h3>
+      <p>Pendekatan Reduce, Reuse, Recycle (3R) merupakan langkah praktis untuk menanggulangi permasalahan sampah plastik. Ada banyak pendekatan 3R yang bisa kita lakukan. Reduce dapat dilakukan dengan membawa wadah makan sendiri atau membeli produk dengan kemasan ramah lingkungan. Reuse dilakukan dengan memanfaatkan kembali barang bekas seperti botol plastik menjadi pot bunga. Sementara itu, Recycle dilakukan dengan mengumpulkan sampah plastik ke bank sampah agar bisa diolah kembali menjadi produk seperti kresek atau pot tanaman. Pendekatan 3R ini dapat menjadi gaya hidup berkelanjutan jika diterapkan secara konsisten oleh masyarakat.</p>
+      <h3>Inovasi: Kemasan Lilin Daun Talas</h3>
+      <p>Sebagai bentuk implementasi prinsip 3R, inovasi kemasan biodegradable berbahan lilin daun talas hadir sebagai solusi alternatif pengganti plastik sekali pakai. Inovasi ini memiliki keunggulan seperti kemampuan terurai hingga 68,74% dalam waktu 9 hari, sifat hidrofobik (100% tahan air), serta kemampuan antimikroba yang menjadikannya aman untuk membungkus makanan. Dengan memanfaatkan daun talas yang kaya lignoselulosa dan mudah terdegradasi, inovasi ini diharapkan mampu mengurangi timbulan sampah rumah tangga berbasis plastik dan menekan pencemaran mikroplastik di lingkungan, khususnya di perairan dan rantai makanan. Diharapkan, kemasan lilin daun talas dapat diadopsi secara luas oleh masyarakat dan industri sebagai alternatif kemasan yang ramah lingkungan. Inovasi ini membawa harapan besar dalam menanggulangi akumulasi sampah plastik dan mikroplastik, sekaligus mendorong perubahan perilaku konsumsi menuju yang lebih berkelanjutan. Jika kemasan biodegradable ini digunakan secara masif, maka potensi pencemaran mikroplastik akan semakin ditekan dan dampaknya terhadap lingkungan serta kesehatan manusia dapat diminimalkan.</p>
+      <h3>Eco-Friendly Lifestyle</h3>
+      <p>Perubahan besar dimulai dari langkah kecil. Kurangi penggunaan plastik sekali pakai, dukung produk-produk biodegradable seperti kemasan daun talas, dan aktif dalam kegiatan daur ulang. Dengan menerapkan gaya hidup eco-friendly berbasis 3R, kita turut menjaga kelestarian lingkungan dan menciptakan masa depan yang lebih sehat dan bersih bagi generasi mendatang.</p>
     </section>
   </main>
 
-  <div id="chatbot-bubble" class="chatbot-bubble">
-    <span class="text-white text-2xl">💬</span>
-  </div>
+  <div id="chatbot-bubble" class="chatbot-bubble">💬</div>
   <div id="chatbot" class="chatbot">
     <div class="flex justify-between items-center">
-      <span class="text-white">Eco-Chatbot</span>
-      <button id="close-chatbot" class="text-white">X</button>
+      <span>Eco-Chatbot</span>
+      <button id="close-chatbot">X</button>
     </div>
     <div id="chatbot-messages" class="chatbot-messages"></div>
-    <input type="text" id="chatbot-input" placeholder="Ketik pesan..." class="w-full p-2 mt-2 rounded"/>
-    <button id="chatbot-send" class="bg-green-600 text-white p-2 mt-2 rounded w-full">Kirim</button>
+    <input type="text" id="chatbot-input" placeholder="Ketik pesan...">
+    <button id="chatbot-send">Kirim</button>
   </div>
 
   <script type="text/babel">
@@ -348,7 +368,7 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
             <Recharts.PieChart>
               <Recharts.Pie
                 data={typeData}
@@ -356,7 +376,7 @@
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={isMobile ? 100 : 120}
+                outerRadius={isMobile ? 80 : 100}
                 label={isMobile ? false : ({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
               >
                 {typeData.map((entry, index) => (
@@ -375,11 +395,11 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
-            <Recharts.BarChart data={sourceData} margin={{ top: 20, right: 20, left: 0, bottom: 40 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+            <Recharts.BarChart data={sourceData} margin={{ top: 20, right: 10, left: 0, bottom: 40 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={isMobile ? -60 : -45} textAnchor="end" height={80} style={{ fontSize: isMobile ? 10 : 12 }} interval={0} />
-              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.XAxis dataKey="name" angle={isMobile ? -45 : -45} textAnchor="end" height={60} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
+              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
               <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
               <Recharts.Bar dataKey="value" fill="#10B981" name="Sumber Sampah" />
@@ -393,11 +413,11 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
-            <Recharts.AreaChart data={timbulanTrend} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+            <Recharts.AreaChart data={timbulanTrend} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 10 : 12 }} />
-              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 8 : 12 }} />
+              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
               <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
               <Recharts.Area type="monotone" dataKey="timbulan" stroke="#10B981" fill="#A7F3D0" name="Timbulan Sampah" />
@@ -412,11 +432,11 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
-            <Recharts.BarChart data={mikroplastikData} margin={{ top: 20, right: 20, left: 0, bottom: 40 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+            <Recharts.BarChart data={mikroplastikData} margin={{ top: 20, right: 10, left: 0, bottom: 40 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={isMobile ? -60 : -45} textAnchor="end" height={80} style={{ fontSize: isMobile ? 10 : 12 }} interval={0} />
-              <Recharts.YAxis style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.XAxis dataKey="name" angle={isMobile ? -45 : -45} textAnchor="end" height={60} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
+              <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => value + '%'} />
               <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
               <Recharts.Bar dataKey="value" fill="#10B981" name="Mikroplastik" />
@@ -430,11 +450,11 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
-            <Recharts.BarChart data={lignoselulosaData} margin={{ top: 20, right: 20, left: 0, bottom: 60 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+            <Recharts.BarChart data={lignoselulosaData} margin={{ top: 20, right: 10, left: 0, bottom: 60 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" angle={isMobile ? -60 : -45} textAnchor="end" height={100} style={{ fontSize: isMobile ? 10 : 12 }} interval={0} />
-              <Recharts.YAxis style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.XAxis dataKey="name" angle={isMobile ? -45 : -45} textAnchor="end" height={80} style={{ fontSize: isMobile ? 8 : 12 }} interval={0} />
+              <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => value + '%'} />
               <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
               <Recharts.Bar dataKey="value" fill="#34D399" name="Kandungan Lignoselulosa" />
@@ -448,11 +468,11 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
-            <Recharts.BarChart data={dekomposisiData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+            <Recharts.BarChart data={dekomposisiData} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="name" style={{ fontSize: isMobile ? 10 : 12 }} />
-              <Recharts.YAxis style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.XAxis dataKey="name" style={{ fontSize: isMobile ? 8 : 12 }} />
+              <Recharts.YAxis style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => value + ' Hari'} />
               <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
               <Recharts.Bar dataKey="value" fill="#10B981" name="Lama Dekomposisi" />
@@ -466,15 +486,15 @@
       const isMobile = window.innerWidth <= 768;
       return (
         <div className="chart-container">
-          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 300 : 400}>
-            <Recharts.LineChart data={biodegradableTrend} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+          <Recharts.ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
+            <Recharts.LineChart data={biodegradableTrend} margin={{ top: 20, right: 10, left: 0, bottom: 20 }}>
               <Recharts.CartesianGrid strokeDasharray="3 3" />
-              <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 10 : 12 }} />
-              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 10 : 12 }} />
+              <Recharts.XAxis dataKey="year" style={{ fontSize: isMobile ? 8 : 12 }} />
+              <Recharts.YAxis tickFormatter={formatNumber} style={{ fontSize: isMobile ? 8 : 12 }} />
               <Recharts.Tooltip formatter={(value) => formatNumber(value) + ' ton'} />
               <Recharts.Legend layout={isMobile ? 'horizontal' : 'vertical'} align={isMobile ? 'center' : 'right'} verticalAlign={isMobile ? 'bottom' : 'middle'} />
               <Recharts.Line type="monotone" dataKey="timbulan" stroke="#10B981" name="Timbulan Sampah" />
-              <Recharts.Line type="monotone" dataKey="biodegradable" stroke="#34D399" name="10% Biodegradable" />
+              <Recharts.Line type="monotone" dataKey="biodegradable" stroke="# hydrochlorb399" name="10% Biodegradable" />
             </Recharts.LineChart>
           </Recharts.ResponsiveContainer>
         </div>
@@ -493,76 +513,69 @@
 
     renderCharts();
 
-    const bubble = document.getElementById('chatbot-bubble');
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    const chatbotBubble = document.getElementById('chatbot-bubble');
     const chatbot = document.getElementById('chatbot');
     const closeChatbot = document.getElementById('close-chatbot');
     const chatbotInput = document.getElementById('chatbot-input');
     const chatbotMessages = document.getElementById('chatbot-messages');
     const chatbotSend = document.getElementById('chatbot-send');
 
-    bubble.addEventListener('click', () => {
-      bubble.style.display = 'none';
+    hamburger.addEventListener('click', toggleSidebar);
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+    }
+
+    chatbotBubble.addEventListener('click', () => {
+      chatbotBubble.style.display = 'none';
       chatbot.classList.add('chatbot-open');
     });
 
     closeChatbot.addEventListener('click', () => {
       chatbot.classList.remove('chatbot-open');
-      bubble.style.display = 'flex';
+      chatbotBubble.style.display = 'flex';
     });
 
     function sendMessage() {
-      const input = document.getElementById("chatbot-input");
-      const body = document.getElementById("chatbot-messages");
-      const question = input.value.toLowerCase().trim();
+      const question = chatbotInput.value.toLowerCase().trim();
       if (!question) return;
 
-      const userMessage = document.createElement("div");
-      userMessage.className = "chatbot-message user";
+      const userMessage = document.createElement('div');
+      userMessage.className = 'chatbot-message user';
       userMessage.textContent = question;
-      body.appendChild(userMessage);
+      chatbotMessages.appendChild(userMessage);
 
-      let answer = "Maaf, saya tidak tahu jawabannya.";
-      if (question.includes("mikroplastik")) {
-        answer = "Mikroplastik adalah partikel plastik <5 mm dari degradasi plastik atau produk seperti kosmetik. Cemari tanah, air, fauna, masuk rantai makanan, berpotensi karsinogenik (DEHA, PCB). Distribusi tertinggi: sedimen (32,61%), makanan (30,43%).";
-      } else if (question.includes("limbah") || question.includes("sampah")) {
-        answer = "Indonesia menghasilkan 5,4 juta ton limbah plastik/tahun (peringkat 2 dunia). Global: 100 juta ton/tahun. Nasional (2024): 25,7 juta ton (sisa makanan 39,9%, plastik 18,6%). Penanganan hanya 50-60%.";
-      } else if (question.includes("3r") || question.includes("reduce") || question.includes("reuse") || question.includes("recycle")) {
-        answer = "3R adalah Reduce (bawa wadah sendiri), Reuse (botol jadi pot bunga), Recycle (daur ulang ke bank sampah). Recovery: Jual PET/HDPE untuk nilai ekonomi.";
-      } else if (question.includes("contoh") && question.includes("reuse")) {
-        answer = "Contoh reuse: Potong botol plastik jadi pot bunga, cat, isi tanah. Atau jadikan tempat pensil dari botol bekas.";
-      } else if (question.includes("talas")) {
-        answer = "Kemasan talas biodegradable (68,74% terurai dalam 9 hari), hidrofobik (100% anti-air), antimikroba (flavonoid, saponin). Cocok untuk bungkus nasi.";
-      } else if (question.includes("proses") && question.includes("talas")) {
-        answer = "Proses pembuatan kemasan talas: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, diuji ketahanan (suhu 0–60°C, kelembapan 50–90%).";
-      } else if (question.includes("degradasi")) {
-        answer = "Kemasan talas terurai 18,46% (hari 1) hingga 68,74% (hari 9). Polipropilena konvensional butuh 200 hari.";
-      } else if (question.includes("lignoselulosa")) {
-        answer = "Kandungan lignoselulosa talas: selulosa 40%, hemiselulosa 36%, lignin 24,05%. Dibandingkan: jagung (selulosa 43%, lignin 17,50%), singkong (selulosa 68%, lignin 13,42%).";
-      } else if (question.includes("tren") && question.includes("sampah")) {
-        answer = "Tren timbulan sampah 2018-2024: 54.830 ton (2018) hingga 25,7 juta ton (2024). Penanganan meningkat tapi hanya 50-60%.";
+      let answer = 'Maaf, saya tidak tahu jawabannya.';
+      if (question.includes('mikroplastik')) {
+        answer = 'Mikroplastik adalah partikel plastik <5 mm dari degradasi plastik atau produk seperti kosmetik. Cemari tanah, air, fauna, masuk rantai makanan, berpotensi karsinogenik (DEHA, PCB).';
+      } else if (question.includes('limbah') || question.includes('sampah')) {
+        answer = 'Indonesia menghasilkan 5,4 juta ton limbah plastik/tahun (peringkat 2 dunia). Global: 100 juta ton/tahun. Nasional (2024): 25,7 juta ton (75% organik, 25% anorganik).';
+      } else if (question.includes('3r') || question.includes('reduce') || question.includes('reuse') || question.includes('recycle')) {
+        answer = '3R adalah Reduce (bawa wadah sendiri), Reuse (botol jadi pot bunga), Recycle (daur ulang ke bank sampah). Recovery: Jual PET/HDPE untuk nilai ekonomi.';
+      } else if (question.includes('contoh') && question.includes('reuse')) {
+        answer = 'Contoh reuse: Potong botol plastik jadi pot bunga, cat, isi tanah. Atau jadikan tempat pensil dari botol bekas.';
+      } else if (question.includes('talas')) {
+        answer = 'Kemasan talas biodegradable (68,74% terurai dalam 9 hari), hidrofobik (100% anti-air), antimikroba (flavonoid, saponin). Cocok untuk bungkus nasi.';
+      } else if (question.includes('proses') && question.includes('talas')) {
+        answer = 'Proses pembuatan kemasan talas: Daun talas dikeringkan, lilin diekstrak dengan pelarut organik, dilapiskan pada kertas cokelat, diuji ketahanan (suhu 0–60°C, kelembapan 50–90%).';
       }
 
-      input.value = '';
+      chatbotInput.value = '';
       setTimeout(() => {
-        const botMessage = document.createElement("div");
-        botMessage.className = "chatbot-message bot";
+        const botMessage = document.createElement('div');
+        botMessage.className = 'chatbot-message bot';
         botMessage.textContent = answer;
-        body.appendChild(botMessage);
-        body.scrollTop = body.scrollHeight;
+        chatbotMessages.appendChild(botMessage);
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
       }, 500);
     }
 
     chatbotSend.addEventListener('click', sendMessage);
     chatbotInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
+      if (e.key === 'Enter') sendMessage();
     });
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('open');
-    }
   </script>
 </body>
 </html>
