@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eco-Friendly Lifestyle: 3R & Talas Innovations</title>
+  <title>Eco-Friendly Lifestyle: 3R Innovaions with Talas</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -317,6 +317,9 @@
         </tbody>
       </table>
 
+      <h3>Konsumsi Mikroplastik</h3>
+      <div class="chart-container"><canvas id="konsumsi-chart"></canvas></div>
+	  
       <h3>Distribusi Mikroplastik</h3>
       <div class="chart-container"><canvas id="mikroplastik-chart"></canvas></div>
 	  
@@ -511,13 +514,14 @@
         <thead>
           <tr>
             <th>Kategori</th>
-            <th>Jumlah</th>
+            <th>Lama</th>
             <th>Keterangan</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Polipropilena</td><td>200 hari</td><td>Konvensional</td></tr>
-          <tr><td>Kemasan Talas</td><td>9 hari</td><td>Biodegradable</td></tr>
+          <tr><td>Polipropilena</td><td>200 bulan</td><td>Konvensional</td></tr>
+		  <tr><td>Polietilena</td><td>120 bulan</td><td>Konvensional</td></tr>
+          <tr><td>Kemasan Talas</td><td>~ 2 Bulan</td><td>Biodegradable</td></tr>
         </tbody>
       </table>
       <div class="chart-container"><canvas id="dekomposisi-chart"></canvas></div>
@@ -670,11 +674,36 @@
           tooltip: { callbacks: { label: (context) => `${context.label}: ${formatNumber(context.raw)} ton` } }
         },
         scales: {
-          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 45 } },
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 0, minRotation: 0 } },
           y: { ticks: { callback: formatNumber, font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
         }
       }
     });
+	
+    const konsumsiChart = new Chart(document.getElementById('konsumsi-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Indonesia', 'Amerika Serikat', 'Paraguay'],
+        datasets: [{
+          label: 'Konsumsi mikroplastik per bulan per orangnya (gram)',
+          data: [15, 2.4, 0.85],
+          backgroundColor: '#10B981',
+          barThickness: window.innerWidth <= 768 ? 20 : 30,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${formatNumber(context.raw)} gram` } }
+        },
+        scales: {
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 0, minRotation: 0 } },
+          y: { ticks: { callback: formatNumber, font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+        }
+      }
+    });	
 
     const trenChart = new Chart(document.getElementById('tren-chart'), {
       type: 'line',
@@ -732,7 +761,7 @@
           tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
         },
         scales: {
-          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 45 } },
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 0, minRotation: 0 } },
           y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
         }
       }
@@ -784,7 +813,7 @@
           tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
         },
         scales: {
-          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 45 } },
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 0, minRotation: 0 } },
           y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
         }
       }
@@ -793,10 +822,10 @@
     const dekomposisiChart = new Chart(document.getElementById('dekomposisi-chart'), {
       type: 'bar',
       data: {
-        labels: ['Polipropilena', 'Kemasan Talas'],
+        labels: ['Polipropilena', 'Polietilena', 'Kemasan Talas'],
         datasets: [{
-          label: 'Lama Dekomposisi (Hari)',
-          data: [200, 9],
+          label: 'Lama Dekomposisi (bulan)',
+          data: [200, 120, 2],
           backgroundColor: '#10B981',
           barThickness: window.innerWidth <= 768 ? 20 : 30,
         }]
@@ -806,7 +835,7 @@
         maintainAspectRatio: false,
         plugins: {
           legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
-          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw} Hari` } }
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw} Bulan` } }
         },
         scales: {
           x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } },
