@@ -807,7 +807,7 @@
     const polimerchart = new Chart(document.getElementById('polimer-chart'), {
       type: 'bar',
       data: {
-        labels: ['PP-Artikel', 'PP-Persentase', 'PE-Artikel', 'PE-Persentase', 'PS-Artikel', 'PS-Persentase', 'PET-Artikel', 'PET-Persentase', 'PVC-Artikel', 'PVC-Persentase', 'PC-Artikel', 'PC-Persentase'],
+        labels: ['PP', 'PE', 'PS', 'PET', 'PVC', 'PC'],
         datasets: [
 	{
           label: 'Jumlah artikel ditemukan sebagai sumber mikroplastik',
@@ -827,7 +827,7 @@
         maintainAspectRatio: false,
         plugins: {
           legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
-          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw} Artikel/Persentase` } }
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}` } }
         },
         scales: {
           x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 0 } },
