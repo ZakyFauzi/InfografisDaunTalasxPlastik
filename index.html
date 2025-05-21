@@ -366,29 +366,11 @@
       <h3>Penjelasan</h3>
       <p>
         Prinsip 3R—Reduce, Reuse, Recycle—menawarkan pendekatan praktis untuk mengurangi limbah plastik
-        dan mikroplastik. Reduce mendorong pengurangan penggunaan plastik sekali pakai, misalnya dengan
-        membawa wadah atau tas belanja sendiri. Reuse mengubah barang plastik bekas menjadi benda berguna,
-        seperti botol plastik yang dipotong, dicat, dan diisi tanah untuk dijadikan pot bunga atau tempat
-        pensil. Recycle melibatkan pengumpulan plastik ke bank sampah untuk diolah kembali menjadi produk
-        seperti kresek atau pot hitam. Penerapan 3R ini tidak hanya mendukung gaya hidup ramah lingkungan,
+        dan mikroplastik. Reduce mendorong pengurangan penggunaan plastik sekali pakai. misalnya dengan
+        membawa wadah sendiri. Reuse mengubah barang plastik bekas menjadi benda berguna, seperti membuat kerajinan. Recycle, mendaur ulang, melibatkan pengumpulan plastik ke bank sampah untuk diolah kembali menjadi produk
+        baru yang dapat digunakan. Penerapan 3R ini tidak hanya mendukung gaya hidup ramah lingkungan,
         tetapi juga mengurangi dampak pencemaran secara signifikan.
       </p>
-
-      <h3>Data Pendekatan 3R</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Kategori</th>
-            <th>Contoh</th>
-            <th>Manfaat</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Reduce</td><td>Bawa wadah/tas belanja</td><td>Kurangi plastik sekali pakai</td></tr>
-          <tr><td>Reuse</td><td>Botol jadi pot bunga</td><td>Perpanjang umur plastik</td></tr>
-          <tr><td>Recycle</td><td>Serahkan ke bank sampah</td><td>Jadi kresek/pot hitam</td></tr>
-        </tbody>
-      </table>
 
       <h3>Alur 3R</h3>
       <div class="infographic">
@@ -674,7 +656,7 @@
           tooltip: { callbacks: { label: (context) => `${context.label}: ${formatNumber(context.raw)} ton` } }
         },
         scales: {
-          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 0, minRotation: 0 } },
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 0 } },
           y: { ticks: { callback: formatNumber, font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
         }
       }
@@ -699,7 +681,7 @@
           tooltip: { callbacks: { label: (context) => `${context.label}: ${formatNumber(context.raw)} gram` } }
         },
         scales: {
-          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 0, minRotation: 0 } },
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 0 } },
           y: { ticks: { callback: formatNumber, font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
         }
       }
@@ -761,7 +743,7 @@
           tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
         },
         scales: {
-          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 0, minRotation: 0 } },
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 0 } },
           y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
         }
       }
@@ -813,7 +795,32 @@
           tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
         },
         scales: {
-          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 0, minRotation: 0 } },
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 0 } },
+          y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+        }
+      }
+    });
+
+    const polimerchart = new Chart(document.getElementById('polimer-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['PP-Artikel', 'PP-Persentase', 'PE-Artikel', 'PE-Persentase', 'PS-Artikel', 'PS-Persentase', 'PET-Artikel', 'PET-Persentase', 'PVC-Artikel', 'PVC-Persentase', 'PC-Artikel', 'PC-Persentase'],
+        datasets: [{
+          label: 'Jumlah artikel ditemukan sebagai sumber mikroplastik dan persentasenya',
+          data: [7, 53.8, 5, 38.4, 6, 46.1, 3, 23.07, 3, 23.07, 2, 15.3],
+          backgroundColor: '#34D399',
+          barThickness: window.innerWidth <= 768 ? 20 : 30,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
+        },
+        scales: {
+          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 }, maxRotation: 45, minRotation: 0 } },
           y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
         }
       }
