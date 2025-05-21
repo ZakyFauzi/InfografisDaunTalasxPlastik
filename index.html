@@ -884,19 +884,29 @@
       chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 
       let answer = 'Maaf, hal itu di luar pengetahuan saya.';
-      if (question.includes('mikroplastik')) {
-        answer = 'Mikroplastik adalah partikel plastik <5 mm dari degradasi plastik atau produk seperti kosmetik. Indonesia konsumsi tertinggi global: 15 gram/bulan (Zhang et al., 2024), vs AS (2,4 gram) dan Paraguay (0,85 gram). Cemari tanah, air, fauna, masuk rantai makanan, berpotensi karsinogenik (DEHA, PCB).';
-      } else if (question.includes('limbah') || question.includes('sampah')) {
-        answer = 'Indonesia menghasilkan 5,4 juta ton limbah plastik/tahun (peringkat 2 dunia). Global: 100 juta ton/tahun. Nasional (2024): 25,7 juta ton (75% organik, 25% anorganik). Penanganan hanya 50-60%.';
-      } else if (question.includes('3r') || question.includes('reduce') || question.includes('reuse') || question.includes('recycle')) {
-        answer = '3R: Reduce (bawa wadah sendiri), Reuse (botol jadi pot bunga), Recycle (daur ulang ke bank sampah). Recovery: Jual PET/HDPE untuk nilai ekonomi. Inovasi talas dukung 3R dengan kurangi plastik dan daur ulang organik.';
-      } else if (question.includes('contoh') && question.includes('reuse')) {
-        answer = 'Contoh reuse: Botol plastik jadi pot bunga, wadah bekas untuk penyimpanan, atau kemasan talas dipakai ulang sebagai pelapis makanan lain.';
-      } else if (question.includes('talas') || question.includes('inovasi')) {
-        answer = 'Inovasi talas: Lilin daun talas gantikan plastik kertas bungkus nasi. • Anti air (lotus effect), • antimikroba (flavonoid, saponin), • biodegradable (69% dalam 9 hari), • lokal. Dukung 3R.';
-      } else if (question.includes('degradasi')) {
-        answer = 'Kemasan talas terurai 69% dalam 9 hari: 1 hari (14%), 3 hari (33%), 5 hari (54%), 7 hari (60%), 9 hari (69%). Jauh lebih cepat vs polipropilena (200 hari).';
-      } 
+
+	  if (question.includes('mikroplastik')) {
+	     answer = 'Mikroplastik adalah partikel plastik <5 mm yang terbentuk dari degradasi plastik yang tidak baik. Indonesia konsumsi tertinggi global: 15 gram/bulan (Zhang et al., 2024), vs AS (2,4 gram) dan Paraguay (0,85 gram). Cemari tanah, air, fauna, masuk rantai makanan, berpotensi karsinogenik (DEHA, PCB).';
+	  } else if (question.includes('limbah') || question.includes('sampah')) {
+	     answer = 'Indonesia menghasilkan 5,4 juta ton limbah plastik/tahun (peringkat 2 dunia). Global: 100 juta ton/tahun. Nasional (2024): 25,7 juta ton (75% organik, 25% anorganik). Penanganan hanya 50-60%.';
+	  } else if (question.includes('3r') || question.includes('reduce') || question.includes('reuse') || question.includes('recycle')) {
+	     answer = '3R: Reduce (mengurangi, contoh: bawa wadah sendiri), Reuse (menggunakan kembali, contoh: botol jadi pot bunga), Recycle (daur ulang, misal daur ulang ke bank sampah). Inovasi talas dukung 3R dengan kurangi plastik dan daur ulang organik.';
+	  } else if (question.includes('talas') || question.includes('inovasi')) {
+	     answer = 'Inovasi talas: Lilin daun talas gantikan plastik kertas bungkus nasi. Anti air (lotus effect), antimikroba (flavonoid, saponin), biodegradable (69% dalam 9 hari), lokal. Inovasi ini mendukung prinsip 3R.';
+	  } else if (question.includes('degradasi')) {
+	     answer = 'Kemasan talas terurai 69% dalam 9 hari: 1 hari (14%), 3 hari (33%), 5 hari (54%), 7 hari (60%), 9 hari (69%). Jauh lebih cepat vs polipropilena (200 hari).';
+	  } else if (question.includes('komposisi sampah')) {
+	     answer = 'Menurut data SIPSN 2024, komposisi sampah di Indonesia terdiri dari sisa makanan (39,9%), plastik (18,6%), kertas (11,6%), kayu (13%), logam (3,2%), kaca (6,9%), dan lainnya (6,8%).';
+	  } else if (question.includes('sumber sampah')) {
+	     answer = 'Sumber utama sampah di Indonesia meliputi rumah tangga, perkantoran, pasar, perniagaan, fasilitas umum, dan kawasan lainnya.';
+	  } else if (question.includes('kertas bungkus nasi')) {
+	     answer = 'Kertas bungkus nasi dilapisi plastik laminasi yang sulit terurai. Penggunaan luasnya menghasilkan banyak sampah plastik yang berpotensi menjadi mikroplastik dan mencemari tanah serta air.';
+	  } else if (question.includes('jenis mikroplastik') || question.includes('polimer mikroplastik')) {
+	     answer = 'Jenis polimer mikroplastik yang sering ditemukan meliputi polypropylene (53,8%), polystyrene (46,1%), polyethylene (38,4%), PET (23,07%), PVC (23,07%), dan polycarbonate (15,3%).';
+	  } else if (question.includes('distribusi mikroplastik') || question.includes('mikroplastik ditemukan')) {
+	     answer = 'Distribusi mikroplastik paling tinggi ditemukan di sedimen (32,61%), diikuti makanan (30,43%), laut (19,57%), sungai (17,39%), limbah (8,70%), udara (4,35%), dan danau (4,35%).';
+	  }
+ 
 
       const botMessage = document.createElement('div');
       botMessage.className = 'chatbot-message bot';
