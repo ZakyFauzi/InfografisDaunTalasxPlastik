@@ -782,13 +782,26 @@
     const lignoselulosaChart = new Chart(document.getElementById('lignoselulosa-chart'), {
       type: 'bar',
       data: {
-        labels: ['Jagung-Selulosa', 'Jagung-Hemiselulosa', 'Jagung-Lignin', 'Singkong-Selulosa', 'Singkong-Hemiselulosa', 'Singkong-Lignin', 'Talas-Selulosa', 'Talas-Hemiselulosa', 'Talas-Lignin'],
-        datasets: [{
-          label: 'Kandungan Lignoselulosa (%)',
-          data: [43, 24, 17.50, 68, 21, 13.42, 40, 36, 24.05],
+        labels: ['Jagung', 'Singkong', 'Talas'],
+        datasets: [
+	{
+          label: 'Selulosa',
+          data: [43, 68, 40],
           backgroundColor: '#34D399',
           barThickness: window.innerWidth <= 768 ? 20 : 30,
-        }]
+        },
+	{
+	  label: 'Hemiselulosa',
+          data: [24, 21, 36],
+          backgroundColor: '#c6ca93',
+          barThickness: window.innerWidth <= 768 ? 20 : 30,
+	},
+	{
+	  label: 'Lignin',
+          data: [17.5, 13.42, 24.05],
+          backgroundColor: '#10B981',
+          barThickness: window.innerWidth <= 768 ? 20 : 30,
+	}]
       },
       options: {
         responsive: true,
