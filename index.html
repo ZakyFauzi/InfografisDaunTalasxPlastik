@@ -81,27 +81,27 @@
       padding: 20px 30px;
       transition: margin-left 0.3s ease;
     }
-	.references {
-	  margin-top: 40px;
-	  padding: 20px;
-	  background-color: #F9FAF8;
-	  border-top: 2px solid #10B981;
-	}
-	.references h2 {
-	  font-size: 1.75rem;
-	  font-weight: 600;
-	  color: #10B981;
-	  margin-bottom: 1.5rem;
-	}
-	.references ul {
-	  list-style-type: decimal;
-	  padding-left: 20px;
-	}
-	.references ul li {
-	  font-size: 1rem;
-	  color: #374151;
-	  margin-bottom: 1rem;
-	}
+    .references {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #F9FAF8;
+      border-top: 2px solid #10B981;
+    }
+    .references h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #10B981;
+      margin-bottom: 1.5rem;
+    }
+    .references ul {
+      list-style-type: decimal;
+      padding-left: 20px;
+    }
+    .references ul li {
+      font-size: 1rem;
+      color: #374151;
+      margin-bottom: 1rem;
+    }
     .section {
       margin-bottom: 50px;
     }
@@ -123,85 +123,44 @@
       font-size: 1rem;
       color: #374151;
       line-height: 1.7;
-      text-align: justify;
+      text-align: justify; /* Tetap dipertahankan */
       margin-bottom: 1.5rem;
     }
     ul {
       margin-bottom: 1.5rem;
     }
-	.logo-container {
-	  display: flex;
-	  justify-content: center;
-	  gap: 1rem;
-	  margin-top: 1rem;
-	}
-
-	.logo {
-	  width: 6rem; /* 96px */
-	  height: 6rem; /* Tinggi sama dengan lebar untuk seragam */
-	  object-fit: contain; /* Pastikan gambar tidak terdistorsi */
-	  display: flex; /* Untuk centering */
-	  align-items: center;
-	  justify-content: center;
-	}
-
-	.designed-by {
-	  text-align: center;
-	  padding: 1.5rem 0;
-	  margin-top: 1.5rem;
-	  border-top: 2px solid #10B981;
-	}
-
-	.designed-by p {
-	  margin: 0.5rem 0;
-	}
-
-	.designed-by p:first-child {
-	  font-size: 1.125rem; /* 18px */
-	  font-weight: 600;
-	  color: #10B981;
-	}
-
-	.designed-by p:last-child {
-	  font-size: 1rem; /* 16px */
-	  color: #374151;
-	}
-
-	/* Media queries untuk responsivitas */
-	@media (max-width: 768px) {
-	  .hamburger { display: block; }
-	  .sidebar { width: 200px; transform: translateX(-100%); }
-	  .sidebar.open { transform: translateX(0); }
-	  main { margin-left: 0; padding: 15px; }
-	  .section h2 { font-size: 1.5rem; }
-	  .section h3 { font-size: 1.1rem; }
-	  .section p { font-size: 0.9rem; }
-	  table { font-size: 0.85rem; }
-	  table th, table td { padding: 6px; }
-	  .chart-container { height: 300px; }
-	  .references ul li { font-size: 0.9rem; }
-	  .chatbot { max-width: 280px; }
-	  .logo {
-		width: 4.8rem; /* 76.8px */
-		height: 4.8rem;
-	  }
-	}
-
-	@media (max-width: 480px) {
-	  .section h2 { font-size: 1.25rem; }
-	  .section h3 { font-size: 1rem; }
-	  .section p { font-size: 0.85rem; }
-	  table { font-size: 0.8rem; }
-	  table th, table td { padding: 4px; }
-	  .chart-container { height: 250px; }
-	  .references ul li { font-size: 0.85rem; }
-	  .chatbot { max-width: 240px; }
-	  .chatbot-bubble { width: 40px; height: 40px; font-size: 1.2rem; }
-	  .logo {
-		width: 3.6rem; /* 57.6px */
-		height: 3.6rem;
-	  }
-	}
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .logo {
+      width: 6rem; /* 96px */
+      height: 6rem; /* Tinggi sama dengan lebar untuk seragam */
+      object-fit: contain; /* Pastikan gambar tidak terdistorsi */
+      display: flex; /* Untuk centering */
+      align-items: center;
+      justify-content: center;
+    }
+    .designed-by {
+      text-align: center;
+      padding: 1.5rem 0;
+      margin-top: 1.5rem;
+      border-top: 2px solid #10B981;
+    }
+    .designed-by p {
+      margin: 0.5rem 0;
+    }
+    .designed-by p:first-child {
+      font-size: 1.125rem; /* 18px */
+      font-weight: 600;
+      color: #10B981;
+    }
+    .designed-by p:last-child {
+      font-size: 1rem; /* 16px */
+      color: #374151;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -316,29 +275,34 @@
       font-weight: 500;
     }
 
+    /* Media queries untuk responsivitas (ditingkatkan) */
     @media (max-width: 768px) {
       .hamburger { display: block; }
       .sidebar { width: 200px; transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
-      main { margin-left: 0; padding: 15px; }
+      main { margin-left: 0; padding: 15px; width: 100%; } /* Memastikan konten memenuhi layar */
       .section h2 { font-size: 1.5rem; }
       .section h3 { font-size: 1.1rem; }
       .section p { font-size: 0.9rem; }
-      table { font-size: 0.85rem; }
+      table { font-size: 0.85rem; overflow-x: auto; display: block; } /* Tambahkan scroll horizontal */
       table th, table td { padding: 6px; }
-      .chart-container { height: 300px; }
-      .chatbot { max-width: 280px; }
+      .chart-container { height: 300px; max-width: 100%; } /* Pastikan tidak melebihi layar */
+      .references ul li { font-size: 0.9rem; }
+      .chatbot { max-width: 90%; bottom: 70px; right: 15px; } /* Sesuaikan posisi */
+      .logo { width: 4.8rem; height: 4.8rem; }
     }
 
     @media (max-width: 480px) {
       .section h2 { font-size: 1.25rem; }
       .section h3 { font-size: 1rem; }
       .section p { font-size: 0.85rem; }
-      table { font-size: 0.8rem; }
+      table { font-size: 0.8rem; overflow-x: auto; display: block; }
       table th, table td { padding: 4px; }
-      .chart-container { height: 250px; }
-      .chatbot { max-width: 240px; }
-      .chatbot-bubble { width: 40px; height: 40px; font-size: 1.2rem; }
+      .chart-container { height: 250px; max-width: 100%; }
+      .references ul li { font-size: 0.85rem; }
+      .chatbot { max-width: 90%; bottom: 60px; right: 10px; }
+      .chatbot-bubble { width: 40px; height: 40px; font-size: 1.2rem; bottom: 15px; right: 15px; }
+      .logo { width: 3.6rem; height: 3.6rem; }
     }
   </style>
 </head>
