@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Styling dasar (tidak diubah kecuali untuk responsivitas) */
+    /* Styling dasar (tidak diubah kecuali untuk tabel) */
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fffae4;
@@ -165,11 +165,12 @@
       color: #374151;
     }
     table {
-      width: 100%; /* Pastikan tabel selalu memenuhi lebar */
+      width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
-      background-color: white;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      /* Hapus background-color dan box-shadow */
+      /* background-color: white; */
+      /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
     }
     table th, table td {
       border: 1px solid #E5E7EB;
@@ -177,7 +178,7 @@
       text-align: left;
       font-size: 0.95rem;
       overflow-wrap: break-word;
-      min-width: 100px; /* Berikan lebar minimum agar sel tidak terlalu kecil */
+      min-width: 100px;
     }
     table th {
       background-color: #10B981;
@@ -297,9 +298,9 @@
         display: block; 
       }
       table th, table td { 
-        padding: 8px; /* Sedikit lebih besar agar rapi */
+        padding: 8px; 
         font-size: 0.85rem; 
-        min-width: 80px; /* Kurangi sedikit untuk layar kecil */
+        min-width: 80px; 
       }
       .chart-container { height: 300px; max-width: 100%; }
       .references { padding: 15px; }
@@ -322,7 +323,7 @@
       table th, table td { 
         padding: 6px; 
         font-size: 0.8rem; 
-        min-width: 60px; /* Kurangi lagi untuk layar sangat kecil */
+        min-width: 60px; 
       }
       .chart-container { height: 250px; max-width: 100%; }
       .references { padding: 10px; }
