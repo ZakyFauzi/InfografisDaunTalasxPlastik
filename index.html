@@ -168,7 +168,8 @@
       width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
-      /* Tidak ada background-color atau box-shadow untuk clean look */
+      overflow-x: auto; /* Tambahkan scroll horizontal */
+      display: block; /* Pastikan tabel responsif */
     }
     table th, table td {
       border: 1px solid #E5E7EB;
@@ -176,7 +177,7 @@
       text-align: left;
       font-size: 0.95rem;
       overflow-wrap: break-word;
-      min-width: 100px; /* Minimum width untuk menjaga proporsi */
+      min-width: 80px; /* Kurangi min-width untuk fleksibilitas */
     }
     table th {
       background-color: #10B981;
@@ -191,11 +192,13 @@
       border-radius: 8px;
       color: white;
       font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .chart-container {
       width: 100%;
       height: 375px;
-      /* Tidak ada background-color atau box-shadow untuk clean look */
       margin: 20px 0 30px 0;
       border-radius: 8px;
       position: relative;
@@ -297,7 +300,11 @@
       table th, table td { 
         padding: 8px; 
         font-size: 0.85rem; 
-        min-width: 80px; 
+        min-width: 70px; /* Kurangi lagi untuk layar kecil */
+      }
+      .infographic { 
+        padding: 12px; 
+        font-size: 0.9rem; 
       }
       .chart-container { height: 300px; max-width: 100%; }
       .references { padding: 15px; }
@@ -320,7 +327,11 @@
       table th, table td { 
         padding: 6px; 
         font-size: 0.8rem; 
-        min-width: 60px; 
+        min-width: 60px; /* Kurangi lebih lanjut untuk layar sangat kecil */
+      }
+      .infographic { 
+        padding: 10px; 
+        font-size: 0.85rem; 
       }
       .chart-container { height: 250px; max-width: 100%; }
       .references { padding: 10px; }
