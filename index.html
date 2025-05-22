@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Styling dasar (tidak diubah kecuali untuk tabel dan infographic) */
+    /* Styling dasar (tidak diubah kecuali untuk tabel) */
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fffae4;
@@ -169,9 +169,8 @@
       max-width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
-      overflow-x: auto;
-      display: block;
       table-layout: fixed; /* Pastikan lebar kolom tetap */
+      overflow-x: auto; /* Scroll horizontal untuk layar kecil */
     }
     table th, table td {
       border: 1px solid #E5E7EB;
@@ -179,7 +178,7 @@
       text-align: left;
       font-size: 0.95rem;
       word-break: break-all; /* Pastikan teks panjang terpotong */
-      width: auto; /* Pastikan lebar kolom menyesuaikan */
+      width: 100%; /* Pastikan setiap kolom mengisi lebar yang tersedia */
     }
     table th {
       background-color: #10B981;
@@ -202,7 +201,7 @@
     }
     .infographic p, .infographic strong {
       margin: 0;
-      text-align: center; /* Pastikan semua teks, termasuk judul, rata tengah */
+      text-align: center;
     }
     .chart-container {
       width: 100%;
@@ -304,7 +303,6 @@
         width: 100%; 
         max-width: 100%; 
         overflow-x: auto; 
-        display: block; 
       }
       table th, table td { 
         padding: 8px; 
@@ -335,7 +333,6 @@
         width: 100%; 
         max-width: 100%; 
         overflow-x: auto; 
-        display: block; 
       }
       table th, table td { 
         padding: 6px; 
