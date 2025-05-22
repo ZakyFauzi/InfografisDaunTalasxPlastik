@@ -165,7 +165,7 @@
       color: #374151;
     }
     table {
-      width: 100%;
+      width: 100%; /* Pastikan tabel selalu memenuhi lebar */
       border-collapse: collapse;
       margin: 20px 0;
       background-color: white;
@@ -176,7 +176,8 @@
       padding: 10px;
       text-align: left;
       font-size: 0.95rem;
-      overflow-wrap: break-word; /* Memastikan teks panjang tidak memaksa lebar tabel */
+      overflow-wrap: break-word;
+      min-width: 100px; /* Berikan lebar minimum agar sel tidak terlalu kecil */
     }
     table th {
       background-color: #10B981;
@@ -290,8 +291,16 @@
       .section h2 { font-size: 1.5rem; }
       .section h3 { font-size: 1.1rem; }
       .section p { font-size: 0.9rem; }
-      table { font-size: 0.85rem; overflow-x: auto; display: block; width: 100%; } /* Tambahkan scroll horizontal */
-      table th, table td { padding: 6px; }
+      table { 
+        width: 100%; 
+        overflow-x: auto; 
+        display: block; 
+      }
+      table th, table td { 
+        padding: 8px; /* Sedikit lebih besar agar rapi */
+        font-size: 0.85rem; 
+        min-width: 80px; /* Kurangi sedikit untuk layar kecil */
+      }
       .chart-container { height: 300px; max-width: 100%; }
       .references { padding: 15px; }
       .references h2 { font-size: 1.5rem; }
@@ -305,8 +314,16 @@
       .section h2 { font-size: 1.25rem; }
       .section h3 { font-size: 1rem; }
       .section p { font-size: 0.85rem; }
-      table { font-size: 0.8rem; overflow-x: auto; display: block; width: 100%; }
-      table th, table td { padding: 4px; }
+      table { 
+        width: 100%; 
+        overflow-x: auto; 
+        display: block; 
+      }
+      table th, table td { 
+        padding: 6px; 
+        font-size: 0.8rem; 
+        min-width: 60px; /* Kurangi lagi untuk layar sangat kecil */
+      }
       .chart-container { height: 250px; max-width: 100%; }
       .references { padding: 10px; }
       .references h2 { font-size: 1.25rem; }
