@@ -166,11 +166,12 @@
     }
     table {
       width: 100%;
-      max-width: 100%; /* Pastikan tabel mengikuti lebar layar */
+      max-width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
       overflow-x: auto;
       display: block;
+      table-layout: fixed; /* Pastikan lebar kolom tetap dan tidak tergantung teks */
     }
     table th, table td {
       border: 1px solid #E5E7EB;
@@ -178,7 +179,7 @@
       text-align: left;
       font-size: 0.95rem;
       overflow-wrap: break-word;
-      /* Hapus min-width agar tabel benar-benar mengikuti lebar layar */
+      /* Hapus min-width sepenuhnya */
     }
     table th {
       background-color: #10B981;
@@ -201,10 +202,10 @@
       width: 100%;
       height: 375px;
       margin: 20px 0 30px 0;
-      border-radius: 8px;
+      border: 1px solid #E5E7EB; /* Border tetap, tanpa latar belakang */
       position: relative;
       overflow: hidden;
-      border: 1px solid #E5E7EB; /* Tambahkan border untuk pembatas */
+      /* Hapus border-radius untuk square join */
     }
     .chatbot-bubble {
       position: fixed;
