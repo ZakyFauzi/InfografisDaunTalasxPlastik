@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Styling dasar (tidak diubah kecuali untuk infographic) */
+    /* Styling dasar (tidak diubah kecuali untuk infographic dan tabel) */
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fffae4;
@@ -171,14 +171,14 @@
       margin: 20px 0;
       overflow-x: auto;
       display: block;
-      table-layout: fixed;
+      table-layout: fixed; /* Pastikan lebar kolom tetap */
     }
     table th, table td {
       border: 1px solid #E5E7EB;
       padding: 10px;
       text-align: left;
       font-size: 0.95rem;
-      overflow-wrap: break-word;
+      word-break: break-all; /* Pastikan teks panjang terpotong dan tidak memengaruhi lebar */
     }
     table th {
       background-color: #10B981;
@@ -193,9 +193,14 @@
       border-radius: 8px;
       color: white;
       font-size: 1rem;
-      display: flex; /* Tambahkan flex untuk centering */
-      align-items: center; /* Pusatkan vertikal */
-      justify-content: center; /* Pusatkan horizontal */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px; /* Berikan tinggi minimum untuk memastikan centering vertikal */
+      flex-direction: column; /* Pastikan elemen di dalamnya disusun vertikal */
+    }
+    .infographic p {
+      margin: 0; /* Hapus margin default pada p untuk centering lebih akurat */
     }
     .chart-container {
       width: 100%;
@@ -282,7 +287,7 @@
       font-weight: 500;
     }
 
-    /* Media queries untuk responsivitas (ditingkatkan untuk infographic) */
+    /* Media queries untuk responsivitas (ditingkatkan untuk tabel dan infographic) */
     @media (max-width: 768px) {
       .hamburger { display: block; }
       .sidebar { width: 200px; transform: translateX(-100%); }
@@ -304,8 +309,9 @@
         font-size: 0.85rem; 
       }
       .infographic { 
-        padding: 12px; /* Kurangi padding sedikit untuk layar kecil */
+        padding: 12px; 
         font-size: 0.9rem; 
+        min-height: 80px; /* Sesuaikan tinggi untuk layar kecil */
       }
       .chart-container { 
         height: 300px; 
@@ -334,8 +340,9 @@
         font-size: 0.8rem; 
       }
       .infographic { 
-        padding: 10px; /* Kurangi padding lebih lanjut untuk layar kecil */
+        padding: 10px; 
         font-size: 0.85rem; 
+        min-height: 60px; /* Sesuaikan tinggi untuk layar sangat kecil */
       }
       .chart-container { 
         height: 250px; 
