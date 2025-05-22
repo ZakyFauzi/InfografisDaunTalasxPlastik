@@ -81,6 +81,27 @@
       padding: 20px 30px;
       transition: margin-left 0.3s ease;
     }
+	.references {
+	  margin-top: 40px;
+	  padding: 20px;
+	  background-color: #F9FAF8;
+	  border-top: 2px solid #10B981;
+	}
+	.references h2 {
+	  font-size: 1.75rem;
+	  font-weight: 600;
+	  color: #10B981;
+	  margin-bottom: 1.5rem;
+	}
+	.references ul {
+	  list-style-type: decimal;
+	  padding-left: 20px;
+	}
+	.references ul li {
+	  font-size: 1rem;
+	  color: #374151;
+	  margin-bottom: 1rem;
+	}
     .section {
       margin-bottom: 50px;
     }
@@ -108,6 +129,65 @@
     ul {
       margin-bottom: 1.5rem;
     }
+	.logo-container {
+	  display: flex;
+	  justify-content: center;
+	  gap: 1rem;
+	  margin-top: 1rem;
+	}
+	.logo {
+	  width: 6rem; /* 96px, seragam untuk semua logo */
+	  height: auto;
+	  object-fit: contain;
+	  max-height: 6rem; /* Batas maksimum tinggi */
+	}
+	.designed-by {
+	  text-align: center;
+	  padding: 1.5rem 0;
+	  margin-top: 1.5rem;
+	  border-top: 2px solid #10B981;
+	}
+	.designed-by p {
+	  margin: 0.5rem 0;
+	}
+	.designed-by .text-lg {
+	  font-size: 1.125rem; /* 18px */
+	  font-weight: 600;
+	  color: #10B981;
+	}
+	.designed-by .text-base {
+	  font-size: 1rem; /* 16px */
+	  color: #374151;
+	}
+
+	@media (max-width: 768px) {
+	  .hamburger { display: block; }
+	  .sidebar { width: 200px; transform: translateX(-100%); }
+	  .sidebar.open { transform: translateX(0); }
+	  main { margin-left: 0; padding: 15px; }
+	  .section h2 { font-size: 1.5rem; }
+	  .section h3 { font-size: 1.1rem; }
+	  .section p { font-size: 0.9rem; }
+	  table { font-size: 0.85rem; }
+	  table th, table td { padding: 6px; }
+	  .chart-container { height: 300px; }
+	  .references ul li { font-size: 0.9rem; }
+	  .chatbot { max-width: 280px; }
+	  .logo { width: 4.8rem; max-height: 4.8rem; } /* 76.8px */
+	}
+
+	@media (max-width: 480px) {
+	  .section h2 { font-size: 1.25rem; }
+	  .section h3 { font-size: 1rem; }
+	  .section p { font-size: 0.85rem; }
+	  table { font-size: 0.8rem; }
+	  table th, table td { padding: 4px; }
+	  .chart-container { height: 250px; }
+	  .references ul li { font-size: 0.85rem; }
+	  .chatbot { max-width: 240px; }
+	  .chatbot-bubble { width: 40px; height: 40px; font-size: 1.2rem; }
+	  .logo { width: 3.6rem; max-height: 3.6rem; } /* 57.6px */
+	}
     table {
       width: 100%;
       border-collapse: collapse;
@@ -149,8 +229,8 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 75px;
-      height: 75px;
+      width: 60px;
+      height: 60px;
       background: #473023;
       border-radius: 50%;
       display: flex;
@@ -255,19 +335,25 @@
     <span></span>
   </nav>
 
-  <div class="sidebar" id="sidebar">
-    <h2>Daftar Isi</h2>
-    <ul>
-      <li><a href="#masalah-plastik" onclick="toggleSidebar()">Limbah Plastik dan Mikroplastik</a></li>
-      <li><a href="#solusi-3r" onclick="toggleSidebar()">Solusi Umum 3R</a></li>
-      <li><a href="#inovasi-talas" onclick="toggleSidebar()">Inovasi Talas</a></li>
-      <li><a href="#kesimpulan" onclick="toggleSidebar()">Kesimpulan</a></li>
-    </ul>
-  </div>
+<div class="sidebar" id="sidebar">
+  <h2>Daftar Isi</h2>
+  <ul>
+    <li><a href="#masalah-plastik" onclick="toggleSidebar()">Limbah Plastik dan Mikroplastik</a></li>
+    <li><a href="#solusi-3r" onclick="toggleSidebar()">Solusi Umum 3R</a></li>
+    <li><a href="#inovasi-talas" onclick="toggleSidebar()">Inovasi Talas</a></li>
+    <li><a href="#kesimpulan" onclick="toggleSidebar()">Kesimpulan</a></li>
+    <li><a href="#referensi" onclick="toggleSidebar()">Referensi</a></li>
+  </ul>
+</div>
 
   <main>
     <header class="text-center mb-6">
       <h1 class="text-2xl font-bold text-10B981">Eco-Friendly Lifestyle: 3R Innovations with Talas</h1>
+		<div class="logo-container flex justify-center gap-4 mt-4">
+		  <img src="https://drive.google.com/uc?export=download&id=1IXixYdLYzsDSjdgy9MmxS2Xgii9okUy5" alt="Logo 1" class="logo">
+		  <img src="https://drive.google.com/uc?export=download&id=1NmOgGohOjYLRGmMIpeiyWOcgxLYFOb1J" alt="Logo 2" class="logo">
+		  <img src="https://drive.google.com/uc?export=download&id=1dM7F34RRNDlBmqvVUqaiBU9pvFdVggdW" alt="Logo 3" class="logo">
+		</div>
     </header>
 
     <section id="masalah-plastik" class="section">
@@ -606,6 +692,24 @@
         eco-friendly berbasis 3R, kita berkontribusi menjaga lingkungan untuk generasi mendatang.
       </p>
     </section>
+	
+	<section id="referensi" class="references">
+	  <h2>Referensi</h2>
+	  <ul>
+		<li>Asofa, A. C. (2018). Analisis dekomposisi plastik biodegradable dengan bahan dasar limbah tongkol jagung (Tugas Akhir, Institut Teknologi Sepuluh Nopember). Surabaya: Departemen Fisika, Fakultas Ilmu Alam, ITS.</li>
+		<li>Aulia, A., Azizah, R., Sulistyorini, L., & Rizaldi, M. A. (2023). Dampak mikroplastik terhadap lingkungan pesisir, biota laut, dan potensi risiko kesehatan: Literature review. Jurnal Kesehatan Lingkungan Indonesia, 22(3), 328–341. https://doi.org/10.14710/jkli.22.3.328-341</li>
+		<li>Sistem Informasi Pengelolaan Sampah Nasional (SIPSN). (n.d.). Data timbulan dan pengelolaan sampah di Indonesia. Kementerian Lingkungan Hidup dan Kehutanan Republik Indonesia. Diakses dari https://sipsn.menlhk.go.id</li>
+		<li>Cornell University. (2024, Mei). Study maps human uptake of microplastics across 109 countries. Cornell Chronicle. Diakses dari https://news.cornell.edu/stories/2024/05/study-maps-human-uptake-microplastics-across-109-countries</li>
+		<li>Mulyasari, T. M., Mukono, J., & Sincihu, Y. (2023). The presence of microplastics in the Indonesian environment and its effects on health. Journal of Public Health in Africa, 14(S2), 2565. https://www.publichealthinafrica.org/index.php/jphia/article/view/2565</li>
+		<li>Nugroho, P. B., Vania, S. N., & Fuadi, A. M. (2022). Pemanfaatan batang tanaman talas (Colocasia esculenta L.) sebagai bahan pembuatan pulp dengan proses soda. Jurnal Teknologi Kimia Unimal, 11(1), 43–55. https://ojs.unimal.ac.id/jtk</li>
+		<li>Yang, Y., Wang, J., Xia, M., & Zhou, J. (2019). Biodegradation and utilization of lignin in various environmental conditions. Journal of Hazardous Materials, PMC6572173. Diakses dari https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6572173/</li>
+		<li>Zhao, X., & You, F. (2024). Microplastic human dietary uptake from 1990 to 2018 grew across 109 major developing and industrialized countries but can be halved by plastic debris removal. Environmental Science & Technology. https://doi.org/10.1021/acs.est.4c00010</li>
+	  </ul>
+	</section>
+	<footer class="designed-by text-center py-6 mt-6 border-t-2 border-10B981">
+	  <p class="text-lg font-semibold text-10B981">Thanks | Designed by</p>
+	  <p class="text-base text-374151">Afiqah Nazifatul Latif, Anjaly Fatimah Mardiyana, Muhammad Dzaki, Zaky Muhammad Fauzi</p>
+	</footer>
   </main>
 
   <div id="chatbot-bubble" class="chatbot-bubble">💬</div>
