@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+        /* Styling dasar (tidak diubah kecuali untuk responsivitas) */
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fffae4;
@@ -86,6 +87,7 @@
       padding: 20px;
       background-color: #F9FAF8;
       border-top: 2px solid #10B981;
+      max-width: 100%; /* Pastikan tidak melebihi layar */
     }
     .references h2 {
       font-size: 1.75rem;
@@ -101,6 +103,7 @@
       font-size: 1rem;
       color: #374151;
       margin-bottom: 1rem;
+      overflow-wrap: break-word; /* Memastikan teks panjang seperti URL tidak keluar batas */
     }
     .section {
       margin-bottom: 50px;
@@ -123,7 +126,7 @@
       font-size: 1rem;
       color: #374151;
       line-height: 1.7;
-      text-align: justify; /* Tetap dipertahankan */
+      text-align: justify;
       margin-bottom: 1.5rem;
     }
     ul {
@@ -243,7 +246,7 @@
     }
     .chatbot-message.user {
       text-align: right;
-      color: #047857;
+    color: #047857;
     }
     .chatbot-message.bot {
       text-align: left;
@@ -275,20 +278,25 @@
       font-weight: 500;
     }
 
-    /* Media queries untuk responsivitas (ditingkatkan) */
+    /* Media queries untuk responsivitas (ditingkatkan untuk referensi) */
     @media (max-width: 768px) {
       .hamburger { display: block; }
       .sidebar { width: 200px; transform: translateX(-100%); }
       .sidebar.open { transform: translateX(0); }
-      main { margin-left: 0; padding: 15px; width: 100%; } /* Memastikan konten memenuhi layar */
+      main { margin-left: 0; padding: 15px 15px 15px 15px; width: 100%; }
+      nav { padding: 0 15px; }
+      nav span { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
       .section h2 { font-size: 1.5rem; }
       .section h3 { font-size: 1.1rem; }
       .section p { font-size: 0.9rem; }
-      table { font-size: 0.85rem; overflow-x: auto; display: block; } /* Tambahkan scroll horizontal */
+      table { font-size: 0.85rem; overflow-x: auto; display: block; }
       table th, table td { padding: 6px; }
-      .chart-container { height: 300px; max-width: 100%; } /* Pastikan tidak melebihi layar */
+      .chart-container { height: 300px; max-width: 100%; }
+      .references { padding: 15px; }
+      .references h2 { font-size: 1.5rem; }
+      .references ul { padding-left: 15px; } /* Kurangi padding agar lebih pas */
       .references ul li { font-size: 0.9rem; }
-      .chatbot { max-width: 90%; bottom: 70px; right: 15px; } /* Sesuaikan posisi */
+      .chatbot { max-width: 90%; bottom: 70px; right: 15px; }
       .logo { width: 4.8rem; height: 4.8rem; }
     }
 
@@ -299,10 +307,15 @@
       table { font-size: 0.8rem; overflow-x: auto; display: block; }
       table th, table td { padding: 4px; }
       .chart-container { height: 250px; max-width: 100%; }
+      .references { padding: 10px; }
+      .references h2 { font-size: 1.25rem; }
+      .references ul { padding-left: 10px; } /* Kurangi padding lebih lanjut */
       .references ul li { font-size: 0.85rem; }
       .chatbot { max-width: 90%; bottom: 60px; right: 10px; }
       .chatbot-bubble { width: 40px; height: 40px; font-size: 1.2rem; bottom: 15px; right: 15px; }
       .logo { width: 3.6rem; height: 3.6rem; }
+      nav { padding: 0 10px; }
+      nav span { font-size: 0.8rem; max-width: 60%; }
     }
   </style>
 </head>
