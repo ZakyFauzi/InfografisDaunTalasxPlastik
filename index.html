@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Styling dasar (tidak diubah kecuali untuk tabel) */
+    /* Styling dasar (tidak diubah kecuali untuk tabel dan chart) */
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fffae4;
@@ -80,7 +80,7 @@
     main {
       margin-left: 250px;
       padding: 20px 30px;
-      transition: margin-left 0.3s ease;
+      transition: margin-left: 0.3s ease;
     }
     .references {
       margin-top: 40px;
@@ -166,10 +166,11 @@
     }
     table {
       width: 100%;
+      max-width: 100%; /* Pastikan tabel mengikuti lebar layar */
       border-collapse: collapse;
       margin: 20px 0;
-      overflow-x: auto; /* Tambahkan scroll horizontal */
-      display: block; /* Pastikan tabel responsif */
+      overflow-x: auto;
+      display: block;
     }
     table th, table td {
       border: 1px solid #E5E7EB;
@@ -177,7 +178,7 @@
       text-align: left;
       font-size: 0.95rem;
       overflow-wrap: break-word;
-      min-width: 80px; /* Kurangi min-width untuk fleksibilitas */
+      /* Hapus min-width agar tabel benar-benar mengikuti lebar layar */
     }
     table th {
       background-color: #10B981;
@@ -203,6 +204,7 @@
       border-radius: 8px;
       position: relative;
       overflow: hidden;
+      border: 1px solid #E5E7EB; /* Tambahkan border untuk pembatas */
     }
     .chatbot-bubble {
       position: fixed;
@@ -294,19 +296,22 @@
       .section p { font-size: 0.9rem; }
       table { 
         width: 100%; 
+        max-width: 100%; 
         overflow-x: auto; 
         display: block; 
       }
       table th, table td { 
         padding: 8px; 
         font-size: 0.85rem; 
-        min-width: 70px; /* Kurangi lagi untuk layar kecil */
       }
       .infographic { 
         padding: 12px; 
         font-size: 0.9rem; 
       }
-      .chart-container { height: 300px; max-width: 100%; }
+      .chart-container { 
+        height: 300px; 
+        max-width: 100%; 
+      }
       .references { padding: 15px; }
       .references h2 { font-size: 1.5rem; }
       .references ul { padding-left: 15px; }
@@ -321,19 +326,22 @@
       .section p { font-size: 0.85rem; }
       table { 
         width: 100%; 
+        max-width: 100%; 
         overflow-x: auto; 
         display: block; 
       }
       table th, table td { 
         padding: 6px; 
         font-size: 0.8rem; 
-        min-width: 60px; /* Kurangi lebih lanjut untuk layar sangat kecil */
       }
       .infographic { 
         padding: 10px; 
         font-size: 0.85rem; 
       }
-      .chart-container { height: 250px; max-width: 100%; }
+      .chart-container { 
+        height: 250px; 
+        max-width: 100%; 
+      }
       .references { padding: 10px; }
       .references h2 { font-size: 1.25rem; }
       .references ul { padding-left: 10px; }
