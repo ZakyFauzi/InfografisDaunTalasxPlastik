@@ -6,8 +6,8 @@
   <title>Eco Friendly Lifestyle: 3R Innovaions with Talas</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* Styling dasar */
+<style>
+    /* Styling dasar (tidak diubah kecuali untuk tabel) */
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fffae4;
@@ -156,12 +156,12 @@
       margin: 0.9rem 0;
     }
     .designed-by p:first-child {
-      font-size: 1.5rem; /* Kecilkan dari 1.125rem */
+      font-size: 1.125rem;
       font-weight: 600;
       color: #10B981;
     }
     .designed-by p:last-child {
-      font-size: 0.5rem; /* Naikkan dari 0.45rem agar lebih terbaca */
+      font-size: 0.45rem;
       color: #374151;
     }
     table {
@@ -169,16 +169,16 @@
       max-width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
-      table-layout: fixed;
-      overflow-x: auto;
+      table-layout: fixed; /* Pastikan lebar kolom tetap */
+      overflow-x: auto; /* Scroll horizontal untuk layar kecil */
     }
     table th, table td {
       border: 1px solid #E5E7EB;
       padding: 10px;
       text-align: left;
       font-size: 0.95rem;
-      overflow-wrap: break-word;
-      width: 100%;
+      overflow-wrap: break-word; /* Ganti break-all menjadi break-word untuk potong kata alami */
+      width: 100%; /* Pastikan kolom mengisi lebar yang tersedia */
     }
     table th {
       background-color: #10B981;
@@ -323,12 +323,6 @@
       .references ul li { font-size: 0.9rem; }
       .chatbot { max-width: 90%; bottom: 70px; right: 15px; }
       .logo { width: 4.8rem; height: 4.8rem; }
-      .designed-by p:first-child {
-        font-size: 0.9rem; /* Kecilkan lebih lanjut di mobile */
-      }
-      .designed-by p:last-child {
-        font-size: 0.55rem; /* Kecilkan lebih lanjut di mobile */
-      }
     }
 
     @media (max-width: 480px) {
@@ -362,12 +356,6 @@
       .logo { width: 3.6rem; height: 3.6rem; }
       nav { padding: 0 10px; }
       nav span { font-size: 0.8rem; max-width: 60%; }
-      .designed-by p:first-child {
-        font-size: 0.8rem; /* Kecilkan lebih lanjut di mobile kecil */
-      }
-      .designed-by p:last-child {
-        font-size: 0.5rem; /* Kecilkan lebih lanjut di mobile kecil */
-      }
     }
   </style>
 </head>
