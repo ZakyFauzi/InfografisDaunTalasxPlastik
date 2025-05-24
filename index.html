@@ -993,30 +993,35 @@
       }
     });
 
-    const dekomposisiChart = new Chart(document.getElementById('dekomposisi-chart'), {
-      type: 'bar',
-      data: {
+const dekomposisiChart = new Chart(document.getElementById('dekomposisi-chart'), {
+    type: 'bar', // Tetap 'bar'
+    data: {
         labels: ['Polipropilena', 'Polietilena', 'Kemasan Talas'],
         datasets: [{
-          label: 'Lama Dekomposisi (bulan)',
-          data: [200, 120, 2],
-          backgroundColor: '#10B981',
-          barThickness: window.innerWidth <= 768 ? 20 : 30,
+            label: 'Lama Dekomposisi (bulan)',
+            data: [200, 120, 2],
+            backgroundColor: '#10B981',
+            barThickness: window.innerWidth <= 768 ? 20 : 30,
         }]
-      },
-      options: {
+    },
+    options: {
+        indexAxis: 'y', // Tambahkan ini untuk membuat bar menjadi horizontal
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
-          tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw} Bulan` } }
+            legend: { position: 'bottom', labels: { font: { size: window.innerWidth <= 768 ? 10 : 12 } } },
+            tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw} Bulan` } }
         },
         scales: {
-          x: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } },
-          y: { ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } } }
+            x: { // Sumbu x sekarang akan menampilkan "Lama Dekomposisi (bulan)"
+                ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } }
+            },
+            y: { // Sumbu y sekarang akan menampilkan label material
+                ticks: { font: { size: window.innerWidth <= 768 ? 8 : 12 } }
+            }
         }
-      }
-    });
+    }
+});
 
     const biodegradableChart = new Chart(document.getElementById('biodegradable-chart'), {
       type: 'line',
