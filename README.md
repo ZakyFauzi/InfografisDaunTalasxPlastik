@@ -70,7 +70,7 @@ Kami menyambut kontribusi untuk meningkatkan proyek ini! Untuk berkontribusi:
 
 ## ©️ Atas Nama Rakyat Indonesia, 2025
 
-Web ini dibuat oleh Zaky Muhammad Fauzi, Muhammad Dzaki, Anjaly Fatimah Mardiyana, Afiqah Nazifatul Latif sebagai pendukung dan pelengkap dari infografis kami pada perlombaan NCC 2025 yang diadakan oleh FMIPA UNY.
+Web ini dibuat oleh Zaky Muhammad Fauzi, Muhammad Dzaki, Anjaly Fatimah Mardiyana, dan Afiqah Nazifatul Latif sebagai pendukung dan pelengkap dari infografis kami pada perlombaan NCC 2025 yang diadakan oleh FMIPA UNY.
 
 ## Lisensi
 
